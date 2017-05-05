@@ -9,4 +9,41 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  
+  <servlet-mapping>
+    <servlet-name>getAllUser</servlet-name>
+    <url-pattern>/getAllUser</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>addUser</servlet-name>
+    <url-pattern>/addUser</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>deleteUser</servlet-name>
+    <url-pattern>/deleteUser</url-pattern>
+  </servlet-mapping>
+   <servlet-mapping>
+    <servlet-name>modifyUser</servlet-name>
+    <url-pattern>/modifyUser</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+  <servlet>
+    <servlet-name>getAllUser</servlet-name>
+    <servlet-class>com.lincoln.action.GetAllUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>addUser</servlet-name>
+    <servlet-class>com.lincoln.action.AddUserServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>deleteUser</servlet-name>
+    <servlet-class>com.lincoln.action.DeleteUserByIdServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>modifyUser</servlet-name>
+    <servlet-class>com.lincoln.action.ModifyUserServlet</servlet-class>
+  </servlet>
 </web-app>

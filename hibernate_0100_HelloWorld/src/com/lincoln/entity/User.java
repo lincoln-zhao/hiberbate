@@ -24,4 +24,9 @@ public class User {
 		this.password = password;
 	}
 	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "user_id:" + user_id + ", user_name:" + user_name + ", password:" + password;
+	}
 }
