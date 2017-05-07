@@ -12,8 +12,8 @@
 		if (type != '0') {
 			$("#user_id").attr("disabled",true);
 			$("#user_id").val('<%=request.getParameter("user_id")%>');
-			$("#user_name").val('<%=request.getParameter("user_name")%>');
-			$("#password").val('<%=request.getParameter("password")%>');
+			$("#user_name").val(decodeURI(decodeURI('<%=request.getParameter("user_name")%>')));
+			$("#password").val(decodeURI(decodeURI('<%=request.getParameter("password")%>')));
 		}
 	})
 </script>
@@ -34,6 +34,7 @@ function formSubmit() {
 	if (type == '0') {
 		$.ajax({
 			type:'post',
+			scriptCharset: 'utf-8',
 			data:{user_id:user_id,user_name:user_name,password:password},
 			url:"<%=request.getContextPath()%>/addUser",
 			success:function(data){

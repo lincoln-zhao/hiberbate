@@ -43,7 +43,7 @@
 	}
 	
 	function openModifyPage(user_id, user_name, password){
-		var param = "user_id=" + user_id + "&user_name=" + user_name + "&password=" + password;
+		var param = "user_id=" + user_id + "&user_name=" + encodeURI(encodeURI(user_name)) + "&password=" + encodeURI(encodeURI(password));
 		var k = window.showModalDialog('addUser.jsp?type=1&' + param,'newwindow','width=200,height=200');
 		if (k == 1) {
 			window.location.reload();
