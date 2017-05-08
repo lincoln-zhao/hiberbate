@@ -30,8 +30,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 		$.ajax({
 			type:'post',
-			data:{userName:username,password:password},
-			url:"<%=request.getContextPath()%>/userLogin",
+			data:{userName:username,password:password,type:"login"},
+			url:"<%=request.getContextPath()%>/user",
 			success:function(data){
 				if (data == 'success') {
 					window.returnValue = 1;

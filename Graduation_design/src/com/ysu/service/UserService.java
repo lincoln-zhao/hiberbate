@@ -9,4 +9,8 @@ public class UserService {
 	public User userLogin (String UserName, String password) {
 		return userDao.userLogin(UserName, password);
 	}
+	
+	public boolean userRegister (User user) {
+		return userDao.userRegister(user);
+	}
 }
