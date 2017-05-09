@@ -52,7 +52,7 @@ function openLoginPage(){
 	<%
 	if (session.getAttribute("loginUser") != null) {
 	%>
-	<font color="ffffff">欢迎&nbsp;&nbsp;<a><%=((User)session.getAttribute("loginUser")).getUser_name() %></a></font>
+	<font color="ffffff">欢迎&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/user?type=showUser" target="_blank"><%=((User)session.getAttribute("loginUser")).getUser_name() %></a></font>
 	<%
 	} else if (session.getAttribute("adminUser") != null) {
 	%>

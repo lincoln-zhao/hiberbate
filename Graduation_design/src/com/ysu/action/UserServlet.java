@@ -1,7 +1,7 @@
 package com.ysu.action;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ysu.entity.Book;
 import com.ysu.entity.User;
 import com.ysu.service.UserService;
 
@@ -45,7 +46,11 @@ public class UserServlet extends HttpServlet {
 			// 用户登录
 			userLogin(request, response);
 		} else if ("register".equals(request.getParameter("type"))) {
+			// 用户注册
 			register(request, response);
+		} else if ("showUser".equals(request.getParameter("type"))) {
+			// 显示用户信息页面
+			showUser(request, response);
 		}
 		
 	}
@@ -141,7 +146,24 @@ public class UserServlet extends HttpServlet {
 //			request.setCharacterEncoding("UTF-8");
 			response.getWriter().write("用户名已注册！");
 		}
-
+	}
+	
+	private void showUser (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 创建service层对象
+		UserService userService = new UserService();
+		
+		// 从session中取得user对象
+		User user = (User) request.getSession().getAttribute("loginUser");
+		
+		if (user != null) {
+			// 调用service层，取得历史借阅数据
+			List<Book> bookList = userService.borrowdBook(user.getUser_id());
+			
+			// 将数据放入request中
+			request.setAttribute("bookList", bookList);
+		}
+		
+		request.getRequestDispatcher("/personal.jsp").forward(request, response);
 	}
 
 }

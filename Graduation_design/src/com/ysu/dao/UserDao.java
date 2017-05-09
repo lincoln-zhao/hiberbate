@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.ysu.entity.Book;
 import com.ysu.entity.User;
 import com.ysu.util.DBUtil;
 
@@ -157,5 +160,58 @@ public class UserDao {
 			}
 		}
 		return result;
+	}
+	
+	/**
+	 * 用户曾借书
+	 * @param UserId
+	 */
+	public List<Book> borrowdBook (String UserId) {
+		List<Book> bookList = new ArrayList<Book>();
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		String sql = " SELECT T_BOOK.BOOK_ID "
+				   + "       ,T_BOOK.BOOK_NAME "
+				   + "       ,T_BORROWBOOKHISTORY.START_DATE "
+				   + "       ,T_BORROWBOOKHISTORY.END_DATE "
+				   + "   FROM T_BORROWBOOKHISTORY, T_BOOK "
+				   + "  WHERE T_BORROWBOOKHISTORY.BOOK_ID = T_BOOK.BOOK_ID "
+				   + "    AND T_BORROWBOOKHISTORY.USER_ID = ?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, Integer.parseInt(UserId));
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setStart_date(rs.getDate("START_DATE"));
+				book.setEnd_date(rs.getDate("END_DATE"));
+				bookList.add(book);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("添加数据异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return bookList;
 	}
 }

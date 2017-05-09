@@ -1,4 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.ysu.entity.User" %>
+<%@page import="com.ysu.entity.Book" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -17,11 +19,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 
-  <link rel="stylesheet" href="css/personal.css" type="text/css"></link></head>
+  <link rel="stylesheet" href="css/personal.css" type="text/css"></link>
    <style>
   a{text-decoration:none}
   a:hover{text-decoration:underline}
   </style>
+  <%User user = (User)session.getAttribute("loginUser"); %>
+  <script src="css/jquery-1.9.0.min.js"></script>
+  <script type="text/javascript">
+  	$(function () {
+  		<%
+  		if (user == null) {
+  		%>
+  		alert("用户未登录！");
+  		window.location.href = "<%=request.getContextPath()%>/main.jsp";
+  		<%
+  		}
+  		%>
+  	})
+  </script>
+</head>
   <body>
 <div class="a17">
   <div class="a18"><img src="img/main.c.png" width="129" height="112" /></div>
@@ -34,29 +51,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a20"><font size="+1"><a href="main.jsp">首页</a>&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)">返回</a></font> </div>
 
 <div class="a27" style="border-color:#000033; border-right-style:solid;border-left-style:solid; border-width:medium;">
-  <p><font size="+3"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 个人信息</font></p>
-  <p><font size="+3">&nbsp;&nbsp;用户名：</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="update.jsp"><font size="+1">修改个人信息</font></a></p>
+  <p><font size="+3"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 个人信息</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="update.jsp"><font size="+1">修改个人信息</font></a></p>
 </div>
 
 <div class="a28"></div>
 
 <div class="a29" style="border-color:#000033; border-right-style:solid;border-top-style:solid;border-left-style:solid; border-width:medium;">
-  <p><font size="+3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 图书推送</font></p>
-  <p>&nbsp;</p>
+
 </div>
 
 <div class="a32"><table width="361" height="294" border="1">
   <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td width="180px">用户名：</td>
+    <td><%=user.getUser_name() %></td>
   </tr>
   <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td>性别：</td>
+    <td><%=user.getSex() %></td>
   </tr>
   <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td>联系电话：</td>
+    <td><%=user.getPhone() %></td>
   </tr>
   <tr>
     <td>&nbsp;</td>
@@ -68,7 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </tr>
 </table>
 </div>
-<div class="a30" align="center"><font size="+3">借书情况</font></div>
+<div class="a30" align="center"><font size="+3">当前借书</font></div>
 <div class="a31">
   <table width="855" height="159" border="1" align="center">
   <tr>
@@ -76,15 +91,39 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="163"><font size="+3">&nbsp;&nbsp;图书名</font></td>
     <td width="163"><font size="+3">&nbsp;借书时间</font></td>
     <td width="166"><font size="+3">&nbsp;还书时间</font></td>
-    <td width="166"><font size="+3">&nbsp;借书状态</font></td>
   </tr>
   <tr>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td>&nbsp;</td>
   </tr>
+</table>
+</div>
+<div class="a30" align="center" style="top:420px;"><font size="+3">曾借书</font></div>
+<div class="a31" style="top:480px;">
+  <table width="855" height="159" border="1" align="center">
+  <tr>
+    <td width="163"><font size="+3"> &nbsp;图书编号</font></td>
+    <td width="163"><font size="+3">&nbsp;&nbsp;图书名</font></td>
+    <td width="163"><font size="+3">&nbsp;借书时间</font></td>
+    <td width="166"><font size="+3">&nbsp;还书时间</font></td>
+  </tr>
+  <%
+  	List<Book> bookList = (List<Book>)request.getAttribute("bookList");
+  	if (bookList != null) {
+  		for (Book book:bookList) {
+  %>
+  			<tr>
+			    <td><%=book.getBook_id() %></td>
+			    <td><%=book.getBook_name() %></td>
+			    <td><%=book.getStart_date() %></td>
+			    <td><%=book.getEnd_date() %></td>
+			  </tr>
+  <%
+  		}
+  	}
+  %>
 </table>
 </div>
   </body>
