@@ -78,23 +78,68 @@ public class UserDao {
 		// 获取Connection连接
 		Connection conn = DBUtil.getConnection();
 		
-		// 向数据库添加数据
 		PreparedStatement ps = null;
-		String sql = "INSERT INTO T_USER (USER_NAME, PASSWORD, SEX, PHONE) "
-				   + "VALUES (?, ?, ?, ?)";
+		
+		// 判断用户是否存在
+		String selectSql = " SELECT USER_ID "
+						 + "   FROM T_USER "
+						 + "  WHERE USER_NAME = ? ";
+		try {
+			ps = conn.prepareStatement(selectSql);
+			ps.setString(1, user.getUser_name());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				try {
+					if (conn != null) {
+						conn.close();
+						conn = null;
+					}
+				} catch (SQLException ee) {
+					ee.printStackTrace();
+					System.out.println("关闭PreparedStatement、Connection异常");
+				}
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("查询数据异常");
+			try {
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException ee) {
+				ee.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		// 向数据库添加数据
+		String sql = " INSERT INTO T_USER (USER_NAME, PASSWORD, SEX, PHONE) "
+				   + " VALUES (?, ?, ?, ?) ";
 		try {
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, user.getUser_name());
 			ps.setString(2, user.getPassword());
 			ps.setString(3, user.getSex());
 			ps.setString(4, user.getPhone());
-			int line = ps.executeUpdate(sql);
+			int line = ps.executeUpdate();
 			if (line > 0) {
 				result = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("查询数据异常");
+			System.out.println("添加数据异常");
 		} finally {
 			try {
 				if (ps != null) {

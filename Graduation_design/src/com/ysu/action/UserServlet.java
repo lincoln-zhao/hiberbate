@@ -45,7 +45,7 @@ public class UserServlet extends HttpServlet {
 			// 用户登录
 			userLogin(request, response);
 		} else if ("register".equals(request.getParameter("type"))) {
-			
+			register(request, response);
 		}
 		
 	}
@@ -89,6 +89,12 @@ public class UserServlet extends HttpServlet {
 		response.getWriter().write(returnStr);
 	}
 	
+	/**
+	 * 用户注册
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	private void register (HttpServletRequest request, HttpServletResponse response) throws IOException {
 		// 创建service层对象
 		UserService userService = new UserService();
@@ -124,26 +130,18 @@ public class UserServlet extends HttpServlet {
 		// 调用service层，注册用户
 		boolean result = userService.userRegister(user);
 		
-		response.setContentType("text/html");  
-        PrintWriter out = response.getWriter();  
-        String name = "hello, servlet";  
-        out.println("<html>");  
-        out.println("<body>");  
-        /** 
-         * 超链接 
-         */  
-        out.println("<a href='ServletB?name="+name+"'>this is a test</a>");  
-        /** 
-         * 表单 
-         */  
-        out.println("<form action='ServletB' method='post'>");          
-        out.println("用户名：");  
-        out.println("<input type='text' name='username'>");  
-        out.println("<input type='submit' vlue='提交'>");  
-        out.println("</form>");  
-        out.println("</body>");  
-        out.println("</html>");  
-        out.flush();  
+		if (result) {
+			// 如果注册成功，则登录
+			userLogin(request, response);
+		} else {
+			System.out.println("用户名已注册！");
+			// 错误信息返回页面
+//			response.setHeader("content-type", "text/html;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+//			request.setCharacterEncoding("UTF-8");
+			response.getWriter().write("用户名已注册！");
+		}
+
 	}
 
 }

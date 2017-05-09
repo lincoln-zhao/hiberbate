@@ -23,9 +23,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   a:hover{text-decoration:underline}
   </style>
   
+  <script src="css/jquery-1.9.0.min.js"></script>
   <script type="text/javascript">
   	function register() {
-  		if($('#radio1').is(':checked')) {
+  		if(!$('#radio1').is(':checked')) {
   		    alert("请确认同意注册协议！");
   		    return false;
   		}
@@ -39,6 +40,27 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		}
   		
   		$("#registerForm").submit();
+  		
+  		var userName = $("#userName").val();
+  		var sex = $("input[name='sex']:checked").val();
+  		var phone = $("#phone").val();
+  		
+  		$.ajax({
+			type:'post',
+			data:{userName:userName,password:password,sex:sex,phone:phone,type:"register"},
+			url:"<%=request.getContextPath()%>/user",
+			success:function(data){
+				if (data == 'success') {
+					alert("注册成功！");
+					window.location.href = "<%=request.getContextPath()%>/main.jsp"
+				} else {
+					alert(data);
+				}
+			},
+			error:function () {
+				alert("系统错误，请联系管理员。");
+			}
+		});
   		
   	}
   </script>
@@ -61,7 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a23"><font size="+2" color="#000000">新用户注册</font></div>
 
 <div class="a24">
-<form action="/user" method="post" id="registerForm">
+
   <table width="330" height="236" border="0">
   <tr>
     <td width="103" height="42">&nbsp;</td>
@@ -85,19 +107,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </tr>
   <tr>
     <td height="36">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 性别：</td>
-    <td><input name="sex" type="radio" value="sex" />男
-	<input name="sex" type="radio" value="sex" />女
+    <td><input name="sex" type="radio" value="男" />男
+	<input name="sex" type="radio" value="女" />女
 	<div class="a25">
 	  <input id="radio1" type="checkbox" name="agree">
 	同意<a href="">《图书馆用户注册协议》</a></div>
-	<input type="hidden" name="type" id="type" value="register">
 	<div class="a26">
-	  <input name="Input" type="submit" style="height:30px; width:100px;" value="注册"></div></td>
+	  <input name="Input" type="submit" style="height:30px; width:100px;" value="注册" onclick="register()"></div></td>
 	
   </tr>
   
 </table>
-</form>
+
 </div>
   </body>
 </html>
