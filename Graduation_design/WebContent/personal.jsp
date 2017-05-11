@@ -35,6 +35,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		window.location.href = "<%=request.getContextPath()%>/main.jsp";
   		<%
   		}
+  		
+  		if (request.getAttribute("returnBookResult") != null) {
+  		%>
+  		alert('<%=request.getAttribute("returnBookResult") %>');
+  		<%
+  		}
   		%>
   	})
   </script>
@@ -90,13 +96,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="163"><font size="+3"> &nbsp;图书编号</font></td>
     <td width="163"><font size="+3">&nbsp;&nbsp;图书名</font></td>
     <td width="163"><font size="+3">&nbsp;借书时间</font></td>
-    <td width="166"><font size="+3">&nbsp;还书时间</font></td>
+    <td width="166"><font size="+3">&nbsp;最晚还书时间</font></td>
+    <td width="166"><font size="+3">&nbsp;操作</font></td>
   </tr>
   <tr>
+  <%
+  List<Book> nowBookList = (List<Book>)request.getAttribute("nowBookList");
+  	if (nowBookList != null) {
+  		for (Book book:nowBookList) {
+  %>
+    <td><%=book.getBook_id() %></td>
+    <td><%=book.getBook_name() %></td>
+	<td><%=book.getStart_date() %></td>
+	<td><%=book.getEnd_date() %></td>
+	<td><a href="<%=request.getContextPath()%>/book?type=returnBook&bookId=<%=book.getBook_id() %>">归还</a></td>
+  <%
+  		}
+  	} else {
+  %>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  <%
+  	}
+  %>
   </tr>
 </table>
 </div>

@@ -20,4 +20,10 @@ public class UserService {
 	public List<Book> borrowdBook (String UserId) {
 		return userDao.borrowdBook(UserId);
 	}
+	
+	public List<Book> nowBorrowBook (String UserId) {
+		return userDao.nowBorrowBook(UserId);
+	}
+	
+
 }

@@ -1,6 +1,7 @@
 package com.ysu.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -166,7 +167,7 @@ public class UserDao {
 	 * 用户曾借书
 	 * @param UserId
 	 */
-	public List<Book> borrowdBook (String UserId) {
+	public List<Book> borrowdBook (String userId) {
 		List<Book> bookList = new ArrayList<Book>();
 		// 获取Connection连接
 		Connection conn = DBUtil.getConnection();
@@ -183,7 +184,7 @@ public class UserDao {
 		
 		try {
 			ps = conn.prepareStatement(sql);
-			ps.setInt(1, Integer.parseInt(UserId));
+			ps.setInt(1, Integer.parseInt(userId));
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
 				Book book = new Book();
@@ -195,7 +196,7 @@ public class UserDao {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("添加数据异常");
+			System.out.println("查询数据异常");
 		} finally {
 			try {
 				if (ps != null) {
@@ -214,4 +215,62 @@ public class UserDao {
 		}
 		return bookList;
 	}
+	
+	/**
+	 * 用户现借书
+	 * @param UserId
+	 * @return
+	 */
+	public List<Book> nowBorrowBook (String userId) {
+		List<Book> nowBookList = new ArrayList<Book>();
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		String sql = " SELECT T_BOOK.BOOK_ID "
+				   + "       ,T_BOOK.BOOK_NAME "
+				   + "       ,T_BOOK.BORROW_OUT_TIME "
+				   + "       ,DATE_ADD(T_BOOK.BORROW_OUT_TIME, INTERVAL 7 DAY) AS RETURN_TIME "
+				   + "   FROM T_USER, T_BOOK "
+				   + "  WHERE T_USER.BOOK_ID = T_BOOK.BOOK_ID "
+				   + "    AND T_USER.USER_ID = ?";
+		
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setInt(1, Integer.parseInt(userId));
+			ResultSet rs = ps.executeQuery();
+			
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setStart_date(rs.getDate("BORROW_OUT_TIME"));
+				book.setEnd_date(rs.getDate("RETURN_TIME"));
+				nowBookList.add(book);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("查询数据异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		
+		return nowBookList;
+	}
+	
 }

@@ -66,11 +66,11 @@ public class UserServlet extends HttpServlet {
 		UserService userService = new UserService();
 		
 		// 获取页面传递的用户名密码
-		String UserName = "";
+		String userName = "";
 		String password = "";
 		
 		if (request.getParameter("userName") != null) {
-			UserName = request.getParameter("userName");
+			userName = request.getParameter("userName");
 		}
 		if (request.getParameter("password") != null) {
 			password = request.getParameter("password");
@@ -80,7 +80,7 @@ public class UserServlet extends HttpServlet {
 		String returnStr = "success";
 		
 		// 调用service层，取得登录的用户
-		User user = userService.userLogin(UserName, password);
+		User user = userService.userLogin(userName, password);
 
 		if (user == null) {
 			System.out.println("用户不存在！");
@@ -105,13 +105,13 @@ public class UserServlet extends HttpServlet {
 		UserService userService = new UserService();
 		
 		// 获取页面传递的用户名密码
-		String UserName = "";
+		String userName = "";
 		String password = "";
 		String sex = "";
 		String phone = "";
 		
 		if (request.getParameter("userName") != null) {
-			UserName = request.getParameter("userName");
+			userName = request.getParameter("userName");
 		}
 		
 		if (request.getParameter("password") != null) {
@@ -127,7 +127,7 @@ public class UserServlet extends HttpServlet {
 		}
 		
 		User user = new User();
-		user.setUser_name(UserName);
+		user.setUser_name(userName);
 		user.setPassword(password);
 		user.setSex(sex);
 		user.setPhone(phone);
@@ -148,6 +148,13 @@ public class UserServlet extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * 显示用户管理界面
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void showUser (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// 创建service层对象
 		UserService userService = new UserService();
@@ -161,6 +168,12 @@ public class UserServlet extends HttpServlet {
 			
 			// 将数据放入request中
 			request.setAttribute("bookList", bookList);
+			
+			// 调用service层，取得当前借阅
+			List<Book> nowBookList = userService.nowBorrowBook(user.getUser_id());
+			
+			// 将数据放入request中
+			request.setAttribute("nowBookList", nowBookList);
 		}
 		
 		request.getRequestDispatcher("/personal.jsp").forward(request, response);
