@@ -63,7 +63,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td> <input name="password" id="password" type="text" style="height:30px; width:300px;">
 	  <div class="a14">
 	    <a href="javascript:void(0)" onclick="userLogin()"><input  type="submit"  style="height:40px; width:100px;" name="login" value="登录" /></a>&nbsp;&nbsp;&nbsp;
-  <a href="regist.jsp"><input name="" type="button" style="height:40px; width:100px;" value="注册"></a></div>  </td></tr>
+  <a href="register.jsp"><input name="" type="button" style="height:40px; width:100px;" value="注册"></a></div>  </td></tr>
 </table>
 </div>
 <p>&nbsp;</p>

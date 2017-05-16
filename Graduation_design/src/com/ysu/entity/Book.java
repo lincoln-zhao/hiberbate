@@ -11,6 +11,7 @@ public class Book {
 	private String number;         // 借阅次数
 	private Date start_date;       // 借阅时间
 	private Date end_date;         // 归还时间
+	private String user_name;      // 借书用户
 	
 	public String getBook_id() {
 		return book_id;
@@ -59,5 +60,11 @@ public class Book {
 	}
 	public void setEnd_date(Date end_date) {
 		this.end_date = end_date;
+	}
+	public String getUser_name() {
+		return user_name;
+	}
+	public void setUser_name(String user_name) {
+		this.user_name = user_name;
 	}
 }

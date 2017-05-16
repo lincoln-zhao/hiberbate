@@ -31,7 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a37"><table width="310" height="299" border="0">
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td width="250"><a href="manager1.jsp"><font size="+2">用户管理</font></a></td>
+    <td width="250"><a href="<%=request.getContextPath()%>/user?type=allUser"><font size="+2">用户管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>

@@ -1,4 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.ysu.entity.User" %>
+<%@page import="com.ysu.entity.Admin" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -30,11 +32,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a37"><table width="310" height="299" border="0">
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td width="250"><a href="manager1.jsp"><font size="+2">用户管理</font></a></td>
+    <td width="250"><a href="<%=request.getContextPath()%>/user?type=allUser"><font size="+2">用户管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td><a href="manager2.jsp"><font size="+2">借还书管理</font></a></td>
+    <td><a href="<%=request.getContextPath()%>/book?type=allBorrowBook"><font size="+2">借还书管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
@@ -51,7 +53,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a36"><font size="+4" color="#623131">欢迎进入图书馆管理系统</font></div>
 
 
-<div class="a42"><font size="+1">管理员：</font></div>
+<div class="a42"><font size="+1">管理员：<%if (session.getAttribute("adminUser") != null){ %><%=((Admin)session.getAttribute("adminUser")).getAdmin_name() %><%} %></font></div>
 <div class="a38" style="border-color:#000033; border-top-style:solid;border-width:thin;"></div>
 
 <div class="a39" style="border-color:#000033; border-top-style:solid;border-width:thin;"></div>

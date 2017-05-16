@@ -1,4 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.ysu.entity.User" %>
+<%@page import="com.ysu.entity.Admin" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -17,7 +19,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 
-  <link rel="stylesheet" href="css/manager1.css" type="text/css"></link></head>
+  <link rel="stylesheet" href="css/manager1.css" type="text/css"></link>
+  
+  <script src="css/jquery-1.9.0.min.js"></script>
+  <script type="text/javascript">
+  	function delUser (userId) {
+		$.ajax({
+			type:'post',
+			data:{userId:userId,type:"delUser"},
+			url:"<%=request.getContextPath()%>/user",
+			success:function(data){
+				if (data == 'success') {
+					alert("删除用户成功！");
+					window.location.reload();
+				} else {
+					alert(data);
+				}
+			},
+			error:function () {
+				alert("系统错误，请联系管理员。");
+			}
+		});
+  	}
+  </script>
+  </head>
    <style>
   a{text-decoration:none}
   a:hover{text-decoration:underline}
@@ -30,11 +55,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a37"><table width="310" height="299" border="0">
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td width="250"><a href="manager1.jsp"><font size="+2">用户管理</font></a></td>
+    <td width="250"><a href="<%=request.getContextPath()%>/user?type=allUser"><font size="+2">用户管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td><a href="manager2.jsp"><font size="+2">借还书管理</font></a></td>
+    <td><a href="<%=request.getContextPath()%>/book?type=allBorrowBook"><font size="+2">借还书管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
@@ -65,12 +90,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="140"><font size="+1">&nbsp;&nbsp;&nbsp;&nbsp;联系方式</font></td>
     <td width="140"><font size="+1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作</font></td>
   </tr>
+  <%List<User> userList = (List<User>) request.getAttribute("nowBookList");
+  	if (userList != null ) {
+  		for (User user:userList) {%>
   <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;<font size="+1">&nbsp;&nbsp;&nbsp;&nbsp;<a href="">删除</a></font></td>
+    <td><%=user.getUser_name() %></td>
+    <td><%=user.getSex() %></td>
+    <td><%=user.getPhone() %></td>
+    <td>&nbsp;<font size="+1">&nbsp;&nbsp;&nbsp;&nbsp;<a href="JavaScript:void(0)" onclick="delUser(<%=user.getUser_id() %>)">删除</a></font></td>
   </tr>
+  <%	}
+  	}%>
 </table>
 </div>
   </body>

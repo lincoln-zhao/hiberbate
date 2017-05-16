@@ -3,6 +3,7 @@ package com.ysu.service;
 import java.util.List;
 
 import com.ysu.dao.UserDao;
+import com.ysu.entity.Admin;
 import com.ysu.entity.Book;
 import com.ysu.entity.User;
 
@@ -25,5 +26,16 @@ public class UserService {
 		return userDao.nowBorrowBook(UserId);
 	}
 	
+	public Admin adminLogin (String adminrName, String password) {
+		return userDao.adminLogin(adminrName, password);
+	}
+	
+	public List<User> getAllUsers () {
+		return userDao.getAllUsers();
+	}
+	
+	public boolean delUser (String userId) {
+		return userDao.delUser(userId);
+	}
 
 }

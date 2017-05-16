@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.ysu.entity.User" %>
+<%@page import="com.ysu.entity.Admin" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -23,6 +24,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript">
 function openLoginPage(){
 	var k = window.showModalDialog('userlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
+	if (k == 1) {
+		window.location.reload();
+	}
+}
+
+function openAdminLoginPage () {
+	var k = window.showModalDialog('adminlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
 	if (k == 1) {
 		window.location.reload();
 	}
@@ -56,12 +64,12 @@ function openLoginPage(){
 	<%
 	} else if (session.getAttribute("adminUser") != null) {
 	%>
-	<font color="ffffff">欢迎管理员&nbsp;&nbsp;<a><%=((User)session.getAttribute("loginUser")).getUser_name() %></a></font>
+	<font color="ffffff">欢迎管理员&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/manager.jsp"><%=((Admin)session.getAttribute("adminUser")).getAdmin_name() %></a></font>
 	<%	
 	} else {
 	%>
 	 <h3> <a href="javascript:void(0)" onclick="openLoginPage()"><font color="ffffff">登录</font></a>&nbsp;&nbsp;
- 	<a href="adminlogin.jsp"><font color="ffffff">管理员登录</font></a></h3>
+ 	<a href="javascript:void(0)" onclick="openAdminLoginPage()"><font color="ffffff">管理员登录</font></a></h3>
 	<%
 	}
 	%>

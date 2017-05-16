@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ysu.entity.Admin;
 import com.ysu.entity.Book;
 import com.ysu.entity.User;
 import com.ysu.util.DBUtil;
@@ -230,11 +231,11 @@ public class UserDao {
 		
 		String sql = " SELECT T_BOOK.BOOK_ID "
 				   + "       ,T_BOOK.BOOK_NAME "
-				   + "       ,T_BOOK.BORROW_OUT_TIME "
-				   + "       ,DATE_ADD(T_BOOK.BORROW_OUT_TIME, INTERVAL 7 DAY) AS RETURN_TIME "
-				   + "   FROM T_USER, T_BOOK "
-				   + "  WHERE T_USER.BOOK_ID = T_BOOK.BOOK_ID "
-				   + "    AND T_USER.USER_ID = ?";
+				   + "       ,T_BORROWBOOK.BORROW_OUT_TIME "
+				   + "       ,DATE_ADD(T_BORROWBOOK.BORROW_OUT_TIME, INTERVAL 7 DAY) AS RETURN_TIME "
+				   + "   FROM T_BORROWBOOK, T_BOOK "
+				   + "  WHERE T_BORROWBOOK.BOOK_ID = T_BOOK.BOOK_ID "
+				   + "    AND T_BORROWBOOK.USER_ID = ?";
 		
 		try {
 			ps = conn.prepareStatement(sql);
@@ -273,4 +274,197 @@ public class UserDao {
 		return nowBookList;
 	}
 	
+	/**
+	 * 管理员登录
+	 * @param adminrName
+	 * @param password
+	 * @return
+	 */
+	public Admin adminLogin (String adminrName, String password) {
+		// 创建管理员对象
+		Admin admin = null;
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		// 查询数据库
+		PreparedStatement ps = null;
+		String sql = "SELECT ADMIN_ID "
+				   + "      ,ADMIN_NAME "
+				   + "      ,PASSWORD "
+				   + "  FROM T_ADMIN "
+				   + " WHERE ADMIN_NAME = ? "
+				   + "   AND PASSWORD = ?";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, adminrName);
+			ps.setString(2, password);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				admin = new Admin();
+				admin.setAdmin_id(rs.getString("ADMIN_ID"));
+				admin.setAdmin_name(rs.getString("ADMIN_NAME"));
+				admin.setPassword(rs.getString("PASSWORD"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("查询数据异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		return admin;
+	}
+	
+	/**
+	 * 取得所用用户
+	 * @return
+	 */
+	public List<User> getAllUsers () {
+		List<User> userList = new ArrayList<User>();
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		// 查询数据库
+		PreparedStatement ps = null;
+		String sql = "SELECT USER_ID "
+				   + "      ,uSER_NAME "
+				   + "      ,PASSWORD "
+				   + "      ,SEX "
+				   + "      ,PHONE "
+				   + "  FROM T_USER ";
+		try {
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				User user = new User();
+				user.setUser_id(rs.getString("USER_ID"));
+				user.setUser_name(rs.getString("USER_NAME"));
+				user.setPassword(rs.getString("PASSWORD"));
+				user.setSex(rs.getString("SEX"));
+				user.setPhone(rs.getString("PHONE"));
+				userList.add(user);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("查询数据异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		return userList;
+	}
+	
+	/**
+	 * 删除用户
+	 * @param userId
+	 */
+	public boolean delUser (String userId) {
+		boolean result = false;
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		// 判断用户是否存在
+		String selectSql = " SELECT USER_ID "
+						 + "   FROM T_USER "
+						 + "  WHERE USER_ID = ? ";
+		try {
+			ps = conn.prepareStatement(selectSql);
+			ps.setString(1, userId);
+			ResultSet rs = ps.executeQuery();
+			if (!rs.next()) {
+				try {
+					if (conn != null) {
+						conn.close();
+						conn = null;
+					}
+				} catch (SQLException ee) {
+					ee.printStackTrace();
+					System.out.println("关闭PreparedStatement、Connection异常");
+				}
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("查询数据异常");
+			try {
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException ee) {
+				ee.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		// 向数据库添加数据
+		String sql = " DELETE FROM T_USER "
+				   + " WHERE USER_ID = ? ";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, userId);
+			int line = ps.executeUpdate();
+			if (line > 0) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("添加数据异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return result;
+	}
 }

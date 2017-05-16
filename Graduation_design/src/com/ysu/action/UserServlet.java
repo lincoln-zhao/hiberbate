@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ysu.entity.Admin;
 import com.ysu.entity.Book;
 import com.ysu.entity.User;
 import com.ysu.service.UserService;
@@ -51,6 +52,15 @@ public class UserServlet extends HttpServlet {
 		} else if ("showUser".equals(request.getParameter("type"))) {
 			// 显示用户信息页面
 			showUser(request, response);
+		} else if ("adminLogin".equals(request.getParameter("type"))) {
+			// 管理员登录
+			adminLogin(request, response);
+		} else if ("allUser".equals(request.getParameter("type"))) {
+			// 取得所有用户
+			getAllUsers(request, response);
+		} else if ("delUser".equals(request.getParameter("type"))) {
+			// 删除用户
+			delUser(request, response);
 		}
 		
 	}
@@ -179,4 +189,89 @@ public class UserServlet extends HttpServlet {
 		request.getRequestDispatcher("/personal.jsp").forward(request, response);
 	}
 
+	/**
+	 * 管理员登录
+	 * @param request
+	 * @param response
+	 * @throws IOException 
+	 */
+	private void adminLogin (HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// 创建service层对象
+		UserService userService = new UserService();
+		
+		// 获取页面传递的用户名密码
+		String adminName = "";
+		String password = "";
+
+		
+		if (request.getParameter("adminName") != null) {
+			adminName = request.getParameter("adminName");
+		}
+		
+		if (request.getParameter("password") != null) {
+			password = request.getParameter("password");
+		}
+		
+		// 调用service层，取得管理员对象
+		Admin admin = userService.adminLogin(adminName, password);
+		
+		// 返回结果
+		String returnStr = "success";
+		
+		if (admin == null) {
+			System.out.println("用户不存在！");
+			returnStr = "failed";
+		} else {
+			// 将查询到的结果放入session中
+			request.getSession().setAttribute("adminUser", admin);
+		}
+
+		// 结果返回页面
+		response.getWriter().write(returnStr);
+	}
+	
+	/**
+	 * 取得所有用户
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void getAllUsers (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 创建service层对象
+		UserService userService = new UserService();
+		
+		// 将数据放入request中
+		request.setAttribute("nowBookList", userService.getAllUsers());
+		request.getRequestDispatcher("/manager1.jsp").forward(request, response);
+	}
+	
+	private void delUser (HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// 创建service层对象
+		UserService userService = new UserService();
+		
+		// 取得用户ID
+		String userId = "";
+		
+		if (request.getParameter("userId") != null) {
+			userId = request.getParameter("userId");
+		}
+		
+		// 调用service对象方法
+		boolean result = userService.delUser(userId);
+		
+		if (result) {
+			response.getWriter().write("success");
+		} else {
+			System.out.println("用户删除失败！");
+			// 错误信息返回页面
+//			response.setHeader("content-type", "text/html;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+//			request.setCharacterEncoding("UTF-8");
+			response.getWriter().write("用户删除失败！");
+		}
+		
+		
+		
+	}
 }

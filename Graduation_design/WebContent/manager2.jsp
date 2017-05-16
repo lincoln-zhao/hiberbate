@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.ysu.entity.Book" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -29,11 +30,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="a37"><table width="310" height="299" border="0">
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td width="250"><a href="manager1.jsp"><font size="+2">用户管理</font></a></td>
+    <td width="250"><a href="<%=request.getContextPath()%>/user?type=allUser"><font size="+2">用户管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td><a href="manager2.jsp"><font size="+2">借还书管理</font></a></td>
+    <td><a href="<%=request.getContextPath()%>/book?type=allBorrowBook"><font size="+2">借还书管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
@@ -63,22 +64,32 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="110"><font size="+1">&nbsp;&nbsp;&nbsp;用户名</font></td>
 	<td width="110"><font size="+1">&nbsp;&nbsp;借书书号</font></td>
 	<td width="110"><font size="+1">&nbsp;&nbsp;借书书名</font></td>
-	<td width="110"><font size="+1">&nbsp;&nbsp;借书封面</font></td>
+	<td width="110"><font size="+1">&nbsp;&nbsp;图书作者</font></td>
     <td width="110"><font size="+1">&nbsp;&nbsp;借书时间</font></td>
     <td width="110"><font size="+1">&nbsp;&nbsp;还书时间</font></td>
     <td width="110"><font size="+1">&nbsp;&nbsp;借书状态</font></td>
-    <td width="110"><font size="+1">&nbsp;&nbsp;&nbsp;&nbsp;操作</font></td>
   </tr>
+  <%List<Book> bookList = (List<Book>)request.getAttribute("bookList");
+  	if (bookList!= null) {
+  		for (Book book:bookList) {
+  %>
   <tr>
+    <td><%=book.getUser_name() %></td>
+    <td><%=book.getBook_id() %></td>
+    <td><%=book.getBook_name() %></td>
+	<td><%=book.getAuthor() %></td>
+    <td><%=book.getStart_date() %></td>
+    <td><%=book.getEnd_date() %></td>
+    <%if (book.getEnd_date().before(new Date())) {  %>
+    <td>超期</td>
+    <%} else { %>
     <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-	<td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
-    <td>&nbsp;<font size="+1">&nbsp;&nbsp;&nbsp;<a href="">删除</a></font></td>
+    <%} %>
   </tr>
+  <%
+  		}
+  	}
+  %>
 </table>
 
 </div>

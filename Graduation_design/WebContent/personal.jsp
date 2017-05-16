@@ -67,6 +67,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>
 
 <div class="a32"><table width="361" height="294" border="1">
+<%if (user != null){ %>
   <tr>
     <td width="180px">用户名：</td>
     <td><%=user.getUser_name() %></td>
@@ -87,6 +88,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td>&nbsp;</td>
     <td>&nbsp;</td>
   </tr>
+  <%} %>
 </table>
 </div>
 <div class="a30" align="center"><font size="+3">当前借书</font></div>

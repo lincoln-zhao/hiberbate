@@ -1,6 +1,7 @@
 package com.ysu.action;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ysu.entity.Book;
 import com.ysu.entity.User;
 import com.ysu.service.BookService;
 
@@ -17,6 +19,8 @@ import com.ysu.service.BookService;
 @WebServlet("/BookServlet")
 public class BookServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	// 创建service对象
+	BookService bookService = new BookService();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -42,6 +46,9 @@ public class BookServlet extends HttpServlet {
 		if ("returnBook".equals(request.getParameter("type"))) {
 			// 显示用户信息页面
 			returnBook(request, response);
+		} else if ("allBorrowBook".equals(request.getParameter("type"))) {
+			// 所用借出去的书
+			getAllBorrowingBook(request, response);
 		}
 		
 		
@@ -55,9 +62,6 @@ public class BookServlet extends HttpServlet {
 	 * @throws ServletException 
 	 */
 	private void returnBook (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 创建service对象
-		BookService bookService = new BookService();
-		
 		// 获取页面传递的图书ID
 		String bookId = "";
 		
@@ -79,7 +83,13 @@ public class BookServlet extends HttpServlet {
 			request.setAttribute("returnBookResult", "还书成功");
 			request.getRequestDispatcher("/user?type=showUser").forward(request, response);
 		}
-		
+	}
+	
+	private void getAllBorrowingBook (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<Book> bookList = bookService.getAllBorrowingBook();
+		request.setAttribute("bookList", bookList);
+		request.getRequestDispatcher("/manager2.jsp").forward(request, response);
+
 	}
 
 }
