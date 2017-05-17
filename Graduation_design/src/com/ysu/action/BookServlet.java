@@ -49,6 +49,15 @@ public class BookServlet extends HttpServlet {
 		} else if ("allBorrowBook".equals(request.getParameter("type"))) {
 			// 所用借出去的书
 			getAllBorrowingBook(request, response);
+		} else if ("allBooks".equals(request.getParameter("type"))) {
+			// 取得所有书信息
+			getAllBooks(request, response);
+		} else if ("addBook".equals(request.getParameter("type"))) {
+			// 添加图书
+			addBook(request, response);
+		} else if ("modifyBook".equals(request.getParameter("type"))) {
+			// 修改图书
+			modifyBook(request, response);
 		}
 		
 		
@@ -85,11 +94,121 @@ public class BookServlet extends HttpServlet {
 		}
 	}
 	
+	/**
+	 * 取得当前所有借出图书
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
 	private void getAllBorrowingBook (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Book> bookList = bookService.getAllBorrowingBook();
 		request.setAttribute("bookList", bookList);
 		request.getRequestDispatcher("/manager2.jsp").forward(request, response);
 
+	}
+	
+	/**
+	 * 取得所有图书信息
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void getAllBooks (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		List<Book> bookList = bookService.getAllBooks();
+		request.setAttribute("bookList", bookList);
+		request.getRequestDispatcher("/manager3.jsp").forward(request, response);
+	}
+	
+	/**
+	 * 添加图书
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void addBook (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 获取页面传递的参数
+		String bookId = "";
+		String bookName = "";
+		String author = "";
+		String classification = "";
+		String position = "";
+		
+		if (request.getParameter("bookId") != null) {
+			bookId = request.getParameter("bookId");
+		}
+		if (request.getParameter("bookName") != null) {
+			bookName = request.getParameter("bookName");
+		}
+		if (request.getParameter("author") != null) {
+			author = request.getParameter("author");
+		}
+		if (request.getParameter("classification") != null) {
+			classification = request.getParameter("classification");
+		}
+		if (request.getParameter("position") != null) {
+			position = request.getParameter("position");
+		}
+		
+		Book book = new Book();
+		book.setBook_id(bookId);
+		book.setBook_name(bookName);
+		book.setAuthor(author);
+		book.setClassification(classification);
+		book.setPosition(position);
+		
+		boolean result = bookService.addBook(book);
+		
+		response.setCharacterEncoding("UTF-8");
+		
+		if (result) {
+			response.getWriter().write("success");
+		} else {
+			response.getWriter().write("图书添加失败，请检查输入内容！");
+		}
+	}
+	
+	/**
+	 * 修改图书
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void modifyBook (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 获取页面传递的参数
+		String bookId = "";
+		String bookName = "";
+		String author = "";
+		String classification = "";
+		String position = "";
+		
+		if (request.getParameter("bookId") != null) {
+			bookId = request.getParameter("bookId");
+		}
+		if (request.getParameter("bookName") != null) {
+			bookName = request.getParameter("bookName");
+		}
+		if (request.getParameter("author") != null) {
+			author = request.getParameter("author");
+		}
+		if (request.getParameter("classification") != null) {
+			classification = request.getParameter("classification");
+		}
+		if (request.getParameter("position") != null) {
+			position = request.getParameter("position");
+		}
+		
+		Book book = new Book();
+		book.setBook_id(bookId);
+		book.setBook_name(bookName);
+		book.setAuthor(author);
+		book.setClassification(classification);
+		book.setPosition(position);
+		
+		
 	}
 
 }

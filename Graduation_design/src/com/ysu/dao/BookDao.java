@@ -142,6 +142,10 @@ public class BookDao {
 		return "success";
 	}
 	
+	/**
+	 * 取得所有当前借出去的书
+	 * @return
+	 */
 	public List<Book> getAllBorrowingBook () {
 		List<Book> bookList = new ArrayList<Book>();
 		
@@ -194,5 +198,159 @@ public class BookDao {
 			}
 		}
 		return bookList;
+	}
+	
+	/**
+	 * 取得所有图书信息
+	 * @return
+	 */
+	public List<Book> getAllBooks () {
+		List<Book> bookList = new ArrayList<Book>();
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT T_BOOK.BOOK_ID "
+					   + "       ,T_BOOK.BOOK_NAME "
+					   + "       ,T_BOOK.AUTHOR "
+					   + "       ,T_BOOK.CLASSIFICATION "
+					   + "       ,T_BOOK.POSITION "
+					   + "   FROM T_BOOK ";
+	
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setAuthor(rs.getString("AUTHOR"));
+				book.setClassification(rs.getString("CLASSIFICATION"));
+				book.setPosition(rs.getString("POSITION"));
+				
+				bookList.add(book);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return bookList;
+	}
+	
+	/**
+	 * 添加图书
+	 * @param book
+	 * @return
+	 */
+	public Boolean addBook (Book book) {
+		Boolean result = false;
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " INSERT INTO  T_BOOK (BOOK_ID, BOOK_NAME, AUTHOR, CLASSIFICATION, POSITION) "
+					   + " VALUES (?, ?, ?, ?, ?) ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, book.getBook_id());
+			ps.setString(2, book.getBook_name());
+			ps.setString(3, book.getAuthor());
+			ps.setString(4, book.getClassification());
+			ps.setString(5, book.getPosition());
+			int line = ps.executeUpdate();
+			if (line != 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 修改图书
+	 * @param book
+	 * @return
+	 */
+	public Boolean modifyBook (Book book) {
+		Boolean result = false;
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " INSERT INTO  T_BOOK (BOOK_ID, BOOK_NAME, AUTHOR, CLASSIFICATION, POSITION) "
+					   + " VALUES (?, ?, ?, ?, ?) ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, book.getBook_id());
+			ps.setString(2, book.getBook_name());
+			ps.setString(3, book.getAuthor());
+			ps.setString(4, book.getClassification());
+			ps.setString(5, book.getPosition());
+			int line = ps.executeUpdate();
+			if (line != 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		return result;
 	}
 }

@@ -15,4 +15,12 @@ public class BookService {
 	public List<Book> getAllBorrowingBook () {
 		return bookDao.getAllBorrowingBook();
 	}
+	
+	public List<Book> getAllBooks () {
+		return bookDao.getAllBooks();
+	}
+	
+	public Boolean addBook (Book book) {
+		return bookDao.addBook(book);
+	}
 }
