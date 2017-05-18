@@ -48,7 +48,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			success:function(data){
 				if (data == 'success') {
 					alert("图书修改成功！");
-					window.location.reload();
+					window.returnValue = 1;
+					window.close();
 				} else {
 					alert("系统错误，请联系管理员。");
 				}
@@ -67,7 +68,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <table width="857" height="76" border="0">
   <tr>
     <td width="29" height="36">&nbsp;&nbsp;图书号：</td>
-    <td width="192"><input name="id" id = "bookId" type="text" /></td>
+    <td width="192"><input name="id" id = "bookId" type="text" disabled="disabled" /></td>
   </tr>
   <tr>
     <td width="29">&nbsp;&nbsp;图书名：</td>

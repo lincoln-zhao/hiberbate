@@ -20,6 +20,8 @@ import com.ysu.service.UserService;
 @WebServlet("/UserLoginServlet")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	// 创建service层对象
+	UserService userService = new UserService();
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -61,6 +63,9 @@ public class UserServlet extends HttpServlet {
 		} else if ("delUser".equals(request.getParameter("type"))) {
 			// 删除用户
 			delUser(request, response);
+		} else if ("modifyUser".equals(request.getParameter("type"))) {
+			// 修改用户信息
+			modifyUser(request, response);
 		}
 		
 	}
@@ -72,9 +77,6 @@ public class UserServlet extends HttpServlet {
 	 * @throws IOException 
 	 */
 	private void userLogin (HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// 创建service层对象
-		UserService userService = new UserService();
-		
 		// 获取页面传递的用户名密码
 		String userName = "";
 		String password = "";
@@ -111,9 +113,6 @@ public class UserServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void register (HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// 创建service层对象
-		UserService userService = new UserService();
-		
 		// 获取页面传递的用户名密码
 		String userName = "";
 		String password = "";
@@ -166,9 +165,6 @@ public class UserServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void showUser (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 创建service层对象
-		UserService userService = new UserService();
-		
 		// 从session中取得user对象
 		User user = (User) request.getSession().getAttribute("loginUser");
 		
@@ -196,9 +192,6 @@ public class UserServlet extends HttpServlet {
 	 * @throws IOException 
 	 */
 	private void adminLogin (HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// 创建service层对象
-		UserService userService = new UserService();
-		
 		// 获取页面传递的用户名密码
 		String adminName = "";
 		String password = "";
@@ -238,18 +231,18 @@ public class UserServlet extends HttpServlet {
 	 * @throws IOException
 	 */
 	private void getAllUsers (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// 创建service层对象
-		UserService userService = new UserService();
-		
 		// 将数据放入request中
 		request.setAttribute("nowBookList", userService.getAllUsers());
 		request.getRequestDispatcher("/manager1.jsp").forward(request, response);
 	}
 	
+	/**
+	 * 删除用户
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	private void delUser (HttpServletRequest request, HttpServletResponse response) throws IOException {
-		// 创建service层对象
-		UserService userService = new UserService();
-		
 		// 取得用户ID
 		String userId = "";
 		
@@ -270,8 +263,59 @@ public class UserServlet extends HttpServlet {
 //			request.setCharacterEncoding("UTF-8");
 			response.getWriter().write("用户删除失败！");
 		}
+	}
+	
+	/**
+	 * 更改用户信息
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void modifyUser (HttpServletRequest request, HttpServletResponse response) throws IOException {
+		// 获取页面传递的用户名密码
+		String userId = "";
+		String userName = "";
+		String password = "";
+		String sex = "";
+		String phone = "";
 		
+		if (request.getParameter("userId") != null) {
+			userId = request.getParameter("userId");
+		}
 		
+		if (request.getParameter("userName") != null) {
+			userName = request.getParameter("userName");
+		}
 		
+		if (request.getParameter("password") != null) {
+			password = request.getParameter("password");
+		}
+		
+		if (request.getParameter("sex") != null) {
+			sex = request.getParameter("sex");
+		}
+		
+		if (request.getParameter("phone") != null) {
+			phone = request.getParameter("phone");
+		}
+		
+		User user = new User();
+		user.setUser_id(userId);
+		user.setUser_name(userName);
+		user.setPassword(password);
+		user.setSex(sex);
+		user.setPhone(phone);
+		
+		// 调用service对象方法
+		boolean result = userService.modifyUser(user);
+		
+		if (result) {
+			userLogin(request, response);
+		} else {
+			System.out.println("用户修改失败！");
+			// 错误信息返回页面
+			response.setCharacterEncoding("UTF-8");
+			response.getWriter().write("用户修改失败！");
+		}
 	}
 }

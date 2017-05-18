@@ -39,8 +39,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			return false;
   		}
   		
-  		$("#registerForm").submit();
-  		
   		var userName = $("#userName").val();
   		var sex = $("input[name='sex']:checked").val();
   		var phone = $("#phone").val();

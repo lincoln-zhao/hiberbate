@@ -23,4 +23,8 @@ public class BookService {
 	public Boolean addBook (Book book) {
 		return bookDao.addBook(book);
 	}
+	
+	public Boolean modifyBook (Book book) {
+		return bookDao.modifyBook(book);
+	}
 }

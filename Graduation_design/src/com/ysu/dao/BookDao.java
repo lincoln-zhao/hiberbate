@@ -318,15 +318,19 @@ public class BookDao {
 		PreparedStatement ps = null;
 		
 		try {
-			String sql = " INSERT INTO  T_BOOK (BOOK_ID, BOOK_NAME, AUTHOR, CLASSIFICATION, POSITION) "
-					   + " VALUES (?, ?, ?, ?, ?) ";
+			String sql = " UPDATE T_BOOK"
+					   + "    SET BOOK_NAME = ? "
+					   + "       ,AUTHOR = ? "
+					   + "       ,CLASSIFICATION = ? "
+					   + "       ,POSITION = ? "
+					   + "  WHERE BOOK_ID = ? ";
 	
 			ps = conn.prepareStatement(sql);
-			ps.setString(1, book.getBook_id());
-			ps.setString(2, book.getBook_name());
-			ps.setString(3, book.getAuthor());
-			ps.setString(4, book.getClassification());
-			ps.setString(5, book.getPosition());
+			ps.setString(1, book.getBook_name());
+			ps.setString(2, book.getAuthor());
+			ps.setString(3, book.getClassification());
+			ps.setString(4, book.getPosition());
+			ps.setString(5, book.getBook_id());
 			int line = ps.executeUpdate();
 			if (line != 0) {
 				result = true;

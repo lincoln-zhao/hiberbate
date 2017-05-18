@@ -208,6 +208,15 @@ public class BookServlet extends HttpServlet {
 		book.setClassification(classification);
 		book.setPosition(position);
 		
+		boolean result = bookService.modifyBook(book);
+		
+		response.setCharacterEncoding("UTF-8");
+		
+		if (result) {
+			response.getWriter().write("success");
+		} else {
+			response.getWriter().write("图书修改失败，请检查输入内容！");
+		}
 		
 	}
 

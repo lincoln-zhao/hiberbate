@@ -467,4 +467,102 @@ public class UserDao {
 		}
 		return result;
 	}
+	
+	/**
+	 * 修改用户信息
+	 * @param user
+	 * @return
+	 */
+	public Boolean modifyUser (User user) {
+		boolean result = false;
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		// 判断用户是否存在
+		String selectSql = " SELECT USER_ID "
+						 + "   FROM T_USER "
+						 + "  WHERE USER_NAME = ?"
+						 + "    AND USER_ID <> ? ";
+		try {
+			ps = conn.prepareStatement(selectSql);
+			ps.setString(1, user.getUser_name());
+			ps.setString(2, user.getUser_id());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				try {
+					if (conn != null) {
+						conn.close();
+						conn = null;
+					}
+				} catch (SQLException ee) {
+					ee.printStackTrace();
+					System.out.println("关闭PreparedStatement、Connection异常");
+				}
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("查询数据异常");
+			try {
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException ee) {
+				ee.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		// 向数据库添加数据
+		String sql = " UPDATE T_USER "
+				   + "    SET USER_NAME = ? "
+				   + "       ,PASSWORD = ? "
+				   + "       ,SEX = ? "
+				   + "       ,PHONE = ? "
+				   + "  WHERE USER_ID = ? ";
+		try {
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, user.getUser_name());
+			ps.setString(2, user.getPassword());
+			ps.setString(3, user.getSex());
+			ps.setString(4, user.getPhone());
+			ps.setString(5, user.getUser_id());
+			int line = ps.executeUpdate();
+			if (line > 0) {
+				result = true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("添加数据异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return result;
+	}
 }

@@ -37,5 +37,9 @@ public class UserService {
 	public boolean delUser (String userId) {
 		return userDao.delUser(userId);
 	}
+	
+	public Boolean modifyUser (User user) {
+		return userDao.modifyUser(user);
+	}
 
 }
