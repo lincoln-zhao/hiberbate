@@ -17,6 +17,10 @@
     <servlet-name>book</servlet-name>
     <servlet-class>com.ysu.action.BookServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>index</servlet-name>
+    <servlet-class>com.ysu.action.IndexServlet</servlet-class>
+  </servlet>
   <servlet-mapping>
     <servlet-name>user</servlet-name>
     <url-pattern>/user</url-pattern>
@@ -24,5 +28,9 @@
   <servlet-mapping>
     <servlet-name>book</servlet-name>
     <url-pattern>/book</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>index</servlet-name>
+    <url-pattern>/index</url-pattern>
   </servlet-mapping>
 </web-app>

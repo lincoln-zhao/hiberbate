@@ -19,11 +19,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 
-  <link rel="stylesheet" href="css/manager.css" type="text/css"></link></head>
+  <link rel="stylesheet" href="css/manager.css" type="text/css"></link>
   <style>
   a{text-decoration:none}
   a:hover{text-decoration:underline}
   </style> 
+  <script src="css/jquery-1.9.0.min.js"></script>
+  <script type="text/javascript">
+  <%if (session.getAttribute("adminUser") == null){ %>
+  	alert("管理员未登录！");
+  	window.location.href = "<%=request.getContextPath()%>/main.jsp";
+  <%}%>
+  </script>
+  
+  </head>
   <body>
 <div class="a33"><img src="img/manager.b.jpg" width="1326" height="645"></img></div>
 

@@ -25,6 +25,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <script src="css/jquery-1.9.0.min.js"></script>
   <script type="text/javascript">
+	<%if (session.getAttribute("adminUser") == null){ %>
+	alert("管理员未登录！");
+	window.location.href = "<%=request.getContextPath()%>/main.jsp";
+	<%}%>
   	$(function () {
   		var param = window.dialogArguments;
   		$("#bookId").val(param.bookid);
@@ -32,6 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		$("#author").val(param.author);
   		$("#classification").val(param.classification);
   		$("#position").val(param.position);
+  		$("#picture").val(param.picture);
   	});
   	
   	function modifyBook() {
@@ -90,6 +95,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <tr>
     <td width="29">图书位置：</td>
     <td><input name="id" id="position" type="text" /></td>
+  </tr>
+  <tr>
+    <td width="29">封面文件名：</td>
+    <td><input name="id" id="picture" type="text" /></td>
   </tr>
 </table>
 </div>

@@ -218,6 +218,7 @@ public class BookDao {
 					   + "       ,T_BOOK.AUTHOR "
 					   + "       ,T_BOOK.CLASSIFICATION "
 					   + "       ,T_BOOK.POSITION "
+					   + "       ,T_BOOK.PICTURE "
 					   + "   FROM T_BOOK ";
 	
 			ps = conn.prepareStatement(sql);
@@ -229,6 +230,7 @@ public class BookDao {
 				book.setAuthor(rs.getString("AUTHOR"));
 				book.setClassification(rs.getString("CLASSIFICATION"));
 				book.setPosition(rs.getString("POSITION"));
+				book.setCoverPicture(rs.getString("PICTURE"));
 				
 				bookList.add(book);
 			}
@@ -356,5 +358,105 @@ public class BookDao {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * 热门借阅
+	 * @return
+	 */
+	public List<Book> hotBook () {
+		List<Book> bookList = new ArrayList<Book>();
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT BOOK_ID "
+					   + "       ,BOOK_NAME "
+					   + "   FROM T_BOOK "
+					   + "  ORDER BY NUMBER DESC, BOOK_ID ASC"
+					   + "  LIMIT 0,7";
+	
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				bookList.add(book);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return bookList;
+	}
+	
+	/**
+	 * 新书上架
+	 * @return
+	 */
+	public List<Book> newBook () {
+		List<Book> bookList = new ArrayList<Book>();
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT BOOK_ID "
+					   + "       ,BOOK_NAME "
+					   + "       ,PICTURE "
+					   + "   FROM T_BOOK "
+					   + "  ORDER BY ADD_DATE DESC, BOOK_ID ASC"
+					   + "  LIMIT 0,3";
+	
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setCoverPicture(rs.getString("PICTURE"));
+				bookList.add(book);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return bookList;
 	}
 }

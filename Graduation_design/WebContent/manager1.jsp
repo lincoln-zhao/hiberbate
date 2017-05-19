@@ -23,6 +23,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <script src="css/jquery-1.9.0.min.js"></script>
   <script type="text/javascript">
+  	<%if (session.getAttribute("adminUser") == null){ %>
+	alert("管理员未登录！");
+	window.location.href = "<%=request.getContextPath()%>/main.jsp";
+	<%}%>
   	function delUser (userId) {
 		$.ajax({
 			type:'post',

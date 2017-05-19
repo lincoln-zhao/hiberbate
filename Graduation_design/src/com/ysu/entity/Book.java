@@ -12,6 +12,8 @@ public class Book {
 	private Date start_date;       // 借阅时间
 	private Date end_date;         // 归还时间
 	private String user_name;      // 借书用户
+	private String coverPicture;   // 封面图片
+	private Date add_date;         // 上架时间
 	
 	public String getBook_id() {
 		return book_id;
@@ -66,5 +68,17 @@ public class Book {
 	}
 	public void setUser_name(String user_name) {
 		this.user_name = user_name;
+	}
+	public String getCoverPicture() {
+		return coverPicture;
+	}
+	public void setCoverPicture(String coverPicture) {
+		this.coverPicture = coverPicture;
+	}
+	public Date getAdd_date() {
+		return add_date;
+	}
+	public void setAdd_date(Date add_date) {
+		this.add_date = add_date;
 	}
 }

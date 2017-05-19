@@ -22,6 +22,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <link rel="stylesheet" href="css/main.css" type="text/css"></link>
 <script src="css/jquery-1.9.0.min.js"></script>
 <script type="text/javascript">
+
 function openLoginPage(){
 	var k = window.showModalDialog('userlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
 	if (k == 1) {

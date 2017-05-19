@@ -27,4 +27,12 @@ public class BookService {
 	public Boolean modifyBook (Book book) {
 		return bookDao.modifyBook(book);
 	}
+	
+	public List<Book> hotBook () {
+		return bookDao.hotBook();
+	}
+	
+	public List<Book> newBook () {
+		return bookDao.newBook();
+	}
 }

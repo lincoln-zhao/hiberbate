@@ -26,6 +26,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   
   <script src="css/jquery-1.9.0.min.js"></script>
   <script type="text/javascript">
+	<%if (session.getAttribute("adminUser") == null){ %>
+	alert("管理员未登录！");
+	window.location.href = "<%=request.getContextPath()%>/main.jsp";
+	<%}%>
   	function addBook () {
   		var bookId = $("#bookId").val();
   		var bookName = $("#bookName").val();
@@ -51,13 +55,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		});
   	}
   	
-  	function modifyBook (bookId, bookName, author, classification, position) {
+  	function modifyBook (bookId, bookName, author, classification, position, picture) {
   		var param = new Object();
-  		param.bookid = bookId
-  		param.bookName = bookName
-  		param.author = author
-  		param.classification = classification
-  		param.position = position
+  		param.bookid = bookId;
+  		param.bookName = bookName;
+  		param.author = author;
+  		param.classification = classification;
+  		param.position = position;
+  		param.picture = picture;
   		
   		var k = window.showModalDialog('updateBook.jsp', param, 'dialogWidthwidth=200,dialogWidthheight=200');
   		if (k == 1) {
@@ -84,7 +89,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-    <td><a href="manager3.jsp"><font size="+2">图书管理</font></a></td>
+    <td><a href="<%=request.getContextPath()%>/book?type=allBooks"><font size="+2">图书管理</font></a></td>
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
@@ -128,6 +133,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
     <td>图书位置：</td>
     <td><input name="id" id="position" type="text" /></td>
+    
+    <td>封面文件：</td>
+    <td><input name="id" id="picture" type="text" /></td>
   </tr>
 </table>
 </div>
@@ -145,6 +153,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="100">&nbsp;&nbsp;&nbsp;图书作者</td>
     <td width="100">&nbsp;&nbsp;&nbsp;图书分类</td>
 	<td width="100">&nbsp;&nbsp;&nbsp;图书位置</td>
+	<td width="100">&nbsp;&nbsp;&nbsp;封面文件名</td>
 	<td width="100">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作</td>
   </tr>
   <%if (request.getAttribute("bookList") != null) { 
@@ -157,7 +166,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <td><%=book.getAuthor() %></td>
 	    <td><%=book.getClassification() %></td>
 		<td><%=book.getPosition() %></td>
-	    <td>&nbsp;<font size="+1">&nbsp;<a href="javascript:void(0)" onclick="modifyBook('<%=book.getBook_id() %>','<%=book.getBook_name() %>','<%=book.getAuthor() %>','<%=book.getClassification() %>','<%=book.getPosition() %>')">修改</a></font>&nbsp;&nbsp;
+		<td><%=book.getCoverPicture() %></td>
+	    <td>&nbsp;<font size="+1">&nbsp;<a href="javascript:void(0)" onclick="modifyBook('<%=book.getBook_id() %>','<%=book.getBook_name() %>','<%=book.getAuthor() %>','<%=book.getClassification() %>','<%=book.getPosition() %>','<%=book.getCoverPicture() %>')">修改</a></font>&nbsp;&nbsp;
 	    	<font size="+1"><a href="javascript:void(0)">删除</a></font>
 	    </td>
 	  </tr>
