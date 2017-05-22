@@ -20,11 +20,30 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="This is my page">
 
-  <link rel="stylesheet" href="css/bookslist.css" type="text/css"></link></head>
+  <link rel="stylesheet" href="css/bookslist.css" type="text/css"></link>
    <style>
   a{text-decoration:none}
   a:hover{text-decoration:underline}
   </style>
+  
+  <script src="css/jquery-1.9.0.min.js"></script>
+<script type="text/javascript">
+
+function openLoginPage(){
+	var k = window.showModalDialog('userlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
+	if (k == 1) {
+		window.location.href = "<%=request.getContextPath()%>/index";
+	}
+}
+
+function openAdminLoginPage () {
+	var k = window.showModalDialog('adminlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
+	if (k == 1) {
+		window.location.href = "<%=request.getContextPath()%>/index";
+	}
+}
+</script>
+</head>
 <body>
 <div class="a17">
   <div class="a18"><img src="img/main.c.png" width="129" height="112" /></div>
