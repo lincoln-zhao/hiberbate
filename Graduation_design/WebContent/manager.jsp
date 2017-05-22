@@ -53,7 +53,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-	<td><a href="manager4.jsp"><font size="+2">报表输出</font></a></td>
+	<td><a href="<%=request.getContextPath()%>/book?type=getAllClassification"><font size="+2">分类管理</font></a></td>
 </table>
 </div>
 

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ysu.service.BookService;
-import com.ysu.service.NewsService;
 
 /**
  * Servlet implementation class IndexServlet
@@ -34,11 +33,10 @@ public class IndexServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		// 创建service对象
 		BookService bookService = new BookService();
-		NewsService newsService = new NewsService();
 		
 		request.setAttribute("hotBook", bookService.hotBook());
 		request.setAttribute("newBook", bookService.newBook());
-		request.setAttribute("newsList", newsService.getNews());
+		request.setAttribute("hotClassification", bookService.getAHotClassification());
 		request.getRequestDispatcher("/main.jsp").forward(request, response);
 	}
 

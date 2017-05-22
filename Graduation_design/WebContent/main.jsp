@@ -1,7 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.ysu.entity.User" %>
 <%@page import="com.ysu.entity.Admin" %>
-<%@page import="com.ysu.entity.News" %>
+<%@page import="com.ysu.entity.Classification" %>
 <%@page import="com.ysu.entity.Book" %>
 <%
 String path = request.getContextPath();
@@ -37,6 +37,12 @@ function openAdminLoginPage () {
 	if (k == 1) {
 		window.location.href = "<%=request.getContextPath()%>/index";
 	}
+}
+
+function searchBook(name) {
+ 	$("#search").val(name);
+ 	$("#searchForm").submit();
+	
 }
 </script>
 <%
@@ -80,14 +86,13 @@ function openAdminLoginPage () {
   </font></div>
 </div>
 
-<div class="a7"><font color="#FFFFFF">
-<h3><a href="main.jsp"><font color="ffffff">首页</font></a>&nbsp;&nbsp;排行榜&nbsp;&nbsp;服务&nbsp;&nbsp;概况</h3></font></div>
+
 <div class="a5"><img src="img/a.gif" width="935" height="282"></img></div>
 
 <div class="a6">
-<form action="<%=request.getContextPath()%>/book?type=search" method="post">
+<form action="<%=request.getContextPath()%>/book?type=search" method="post" id="searchForm">
   <h1>
-    <input name="search" type="text"  style="width:300px; height:30px;"/>
+    <input name="search" id="search" type="text"  style="width:300px; height:30px;"/>
     &nbsp;
   <input type="submit" name="Submit" value="查找"  style="width:60px; height:30px; color:#FFFFFF; background-color:#FF0000;"/>
   </h1>
@@ -131,15 +136,15 @@ function openAdminLoginPage () {
   %>
 </table></div>
 
-<div class="a10" align="center" ><font color="#0033CC" size="+3">最新动态</font>
+<div class="a10" align="center" ><font color="#0033CC" size="+3">热门分类</font>
   <table width="309" height="316" border="0">
   <%
-  	List<News> newsList = (List<News>)request.getAttribute("newsList");
-  	if (newsList != null) {
-		for (News news:newsList) {
+  	List<Classification> classificationList = (List<Classification>)request.getAttribute("hotClassification");
+  	if (classificationList != null) {
+		for (Classification classification:classificationList) {
   %>
   <tr>
-    <td width="299">&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1">&nbsp;<%=news.getTitle() %></font></td>
+    <td width="299">&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1">&nbsp;<a href="javascript:void(0)" onclick="return searchBook('<%=classification.getClassificationName()%>')"><%=classification.getClassificationName()%></a></font></td>
   </tr>
   <%
 		}

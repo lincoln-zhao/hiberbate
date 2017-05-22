@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ysu.entity.Book;
+import com.ysu.entity.Classification;
 import com.ysu.entity.User;
 import com.ysu.service.BookService;
 
@@ -58,16 +59,28 @@ public class BookServlet extends HttpServlet {
 		} else if ("modifyBook".equals(request.getParameter("type"))) {
 			// 修改图书
 			modifyBook(request, response);
+		} else if ("delBook".equals(request.getParameter("type"))) {
+			// 删除图书
+			delBook(request, response);
 		} else if ("getSingleBook".equals(request.getParameter("type"))) {
-			// 修改图书
+			// 获取单个图书信息
 			getSingleBook(request, response);
 		} else if ("borrowBook".equals(request.getParameter("type"))) {
 			// 借书
 			borrowBook(request, response);
 		} else if ("search".equals(request.getParameter("type"))) {
-			// 借书
+			// 图书查询
 			searchBook(request, response);
-	}
+		} else if ("addClassification".equals(request.getParameter("type"))) {
+			// 添加分类
+			addClassification(request, response);
+		} else if ("delClassification".equals(request.getParameter("type"))) {
+			// 删除分类
+			delClassification(request, response);
+		} else if ("getAllClassification".equals(request.getParameter("type"))) {
+			// 取得全部分类
+			getAllClassification(request, response);
+		}
 		
 		
 	}
@@ -140,7 +153,9 @@ public class BookServlet extends HttpServlet {
 	 */
 	private void getAllBooks (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		List<Book> bookList = bookService.getAllBooks();
+		List<Classification> classificationList = bookService.getAllClassification();
 		request.setAttribute("bookList", bookList);
+		request.setAttribute("classificationList", classificationList);
 		request.getRequestDispatcher("/manager3.jsp").forward(request, response);
 	}
 	
@@ -158,6 +173,7 @@ public class BookServlet extends HttpServlet {
 		String author = "";
 		String classification = "";
 		String position = "";
+		String picture = "";
 		
 		if (request.getParameter("bookId") != null) {
 			bookId = request.getParameter("bookId");
@@ -174,6 +190,9 @@ public class BookServlet extends HttpServlet {
 		if (request.getParameter("position") != null) {
 			position = request.getParameter("position");
 		}
+		if (request.getParameter("picture") != null) {
+			picture = request.getParameter("picture");
+		}
 		
 		Book book = new Book();
 		book.setBook_id(bookId);
@@ -181,6 +200,7 @@ public class BookServlet extends HttpServlet {
 		book.setAuthor(author);
 		book.setClassification(classification);
 		book.setPosition(position);
+		book.setCoverPicture(picture);
 		
 		boolean result = bookService.addBook(book);
 		
@@ -239,6 +259,30 @@ public class BookServlet extends HttpServlet {
 			response.getWriter().write("success");
 		} else {
 			response.getWriter().write("图书修改失败，请检查输入内容！");
+		}
+	}
+	
+	/**
+	 * 删除图书
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private  void delBook (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 获取页面传递的参数
+		String bookId = "";
+		
+		if (request.getParameter("bookId") != null) {
+			bookId = request.getParameter("bookId");
+		}
+		
+		Boolean result = bookService.delBook(bookId);
+		
+		if (result) {
+			response.getWriter().write("success");
+		} else {
+			response.getWriter().write("图书删除失败！");
 		}
 	}
 	
@@ -309,4 +353,67 @@ public class BookServlet extends HttpServlet {
 		request.setAttribute("bookList", bookList);
 		request.getRequestDispatcher("/bookslist.jsp").forward(request, response);
 	}
+	
+	/**
+	 * 添加分类
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void addClassification (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 获取页面传递的参数
+		String name = "";
+		
+		if (request.getParameter("c_name") != null) {
+			name = request.getParameter("c_name");
+		}
+		
+		
+		
+		String result = bookService.addClassification(name);
+		
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(result);
+	}
+	
+	/**
+	 * 删除分类
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void delClassification (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 获取页面传递的参数
+		String id = "";
+		
+		if (request.getParameter("c_id") != null) {
+			id = request.getParameter("c_id");
+		}
+		
+		id = new String(id.getBytes("ISO-8859-1"), "UTF-8");
+		
+		String result = bookService.delClassification(id);
+		
+		response.setCharacterEncoding("UTF-8");
+		response.getWriter().write(result);
+	}
+	
+	/**
+	 * 获取全部分类信息
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void getAllClassification (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		List<Classification> classificationList = bookService.getAllClassification();
+		
+		request.setAttribute("classificationList", classificationList);
+		request.getRequestDispatcher("/manager4.jsp").forward(request, response);
+	}
+	
+	
 }

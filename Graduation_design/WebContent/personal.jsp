@@ -119,7 +119,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<%
 		} else {
 	%>
-	<td><a href="javascript:alert('图书超期，轻语管理员联系。')">归还</a></td>
+	<td><a href="javascript:alert('图书超期，请与管理员联系。')">归还</a></td>
 	<%
 		}
 	%>

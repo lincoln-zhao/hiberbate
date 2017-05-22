@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.ysu.entity.Book;
+import com.ysu.entity.Classification;
 import com.ysu.util.DBUtil;
 
 public class BookDao {
@@ -272,8 +273,8 @@ public class BookDao {
 		PreparedStatement ps = null;
 		
 		try {
-			String sql = " INSERT INTO  T_BOOK (BOOK_ID, BOOK_NAME, AUTHOR, CLASSIFICATION, POSITION) "
-					   + " VALUES (?, ?, ?, ?, ?) ";
+			String sql = " INSERT INTO  T_BOOK (BOOK_ID, BOOK_NAME, AUTHOR, CLASSIFICATION, POSITION, PICTURE, ADD_DATE) "
+					   + " VALUES (?, ?, ?, ?, ?, ?, CURDATE()) ";
 	
 			ps = conn.prepareStatement(sql);
 			ps.setString(1, book.getBook_id());
@@ -281,6 +282,7 @@ public class BookDao {
 			ps.setString(3, book.getAuthor());
 			ps.setString(4, book.getClassification());
 			ps.setString(5, book.getPosition());
+			ps.setString(6, book.getCoverPicture());
 			int line = ps.executeUpdate();
 			if (line != 0) {
 				result = true;
@@ -335,6 +337,52 @@ public class BookDao {
 			ps.setString(3, book.getClassification());
 			ps.setString(4, book.getPosition());
 			ps.setString(5, book.getBook_id());
+			int line = ps.executeUpdate();
+			if (line != 0) {
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 删除图书
+	 * @param book
+	 * @return
+	 */
+	public Boolean delBook (String bookId) {
+		Boolean result = false;
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " DELETE FROM T_BOOK"
+					   + "  WHERE BOOK_ID = ? ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, bookId);
 			int line = ps.executeUpdate();
 			if (line != 0) {
 				result = true;
@@ -643,5 +691,217 @@ public class BookDao {
 			}
 		}
 		return bookList;
+	}
+	
+	/**
+	 * 添加分类
+	 * @param name
+	 * @return
+	 */
+	public String addClassification (String name) {
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT CLASSIFICATION_ID "
+					   + "   FROM T_CLASSIFICATION "
+					   + "  WHERE CLASSIFICATION_NAME = ? ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, name);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return "分类以存在";
+			}
+			
+			ps.close();
+			ps = null;
+			
+			
+			String sqlInsert = " INSERT INTO T_CLASSIFICATION (CLASSIFICATION_NAME) "
+					   		 + " VALUES (?) ";
+			
+			ps = conn.prepareStatement(sqlInsert);
+			ps.setString(1, name);
+			
+			int line = ps.executeUpdate();
+			
+			if (line == 0) {
+				return "系统正在维护，请与管理员联系！";
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return "success";
+	}
+	
+	/**
+	 * 删除分类
+	 * @param id
+	 * @return
+	 */
+	public String delClassification (String id) {
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		try {
+			String sql = " DELETE FROM T_CLASSIFICATION "
+					   + "  WHERE CLASSIFICATION_ID = ? ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, id);
+			
+			int line = ps.executeUpdate();
+			
+			if (line == 0) {
+				return "系统正在维护，请与管理员联系！";
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return "success";
+	}
+	
+	/**
+	 * 取得全部分类信息
+	 * @return
+	 */
+	public List<Classification> getAllClassification () {
+		List<Classification> classificationList = new ArrayList<Classification>();
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT CLASSIFICATION_ID "
+					   + "       ,CLASSIFICATION_NAME "
+					   + "   FROM T_CLASSIFICATION ";
+	
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Classification classification = new Classification();
+				classification.setClassificationId(rs.getString("CLASSIFICATION_ID"));
+				classification.setClassificationName(rs.getString("CLASSIFICATION_NAME"));
+				
+				classificationList.add(classification);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return classificationList;
+	}
+	
+	/**
+	 * 热门分类
+	 * @return
+	 */
+	public List<Classification> getAHotClassification () {
+		List<Classification> classificationList = new ArrayList<Classification>();
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT CLASSIFICATION_ID "
+					   + "       ,CLASSIFICATION_NAME"
+					   + "       ,NUMBER"
+					   + "   FROM T_CLASSIFICATION "
+					   + "   LEFT JOIN ( "
+					   + "         SELECT CLASSIFICATION "
+					   + "               ,SUM(NUMBER) AS NUMBER "
+					   + "           FROM T_BOOK "
+					   + "          GROUP BY CLASSIFICATION "
+					   + "        ) T"
+					   + "     ON T_CLASSIFICATION.CLASSIFICATION_NAME = T.CLASSIFICATION"
+					   + "  ORDER BY NUMBER DESC "
+					   + "  LIMIT 0,7";
+	
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Classification classification = new Classification();
+				classification.setClassificationId(rs.getString("CLASSIFICATION_ID"));
+				classification.setClassificationName(rs.getString("CLASSIFICATION_NAME"));
+				
+				classificationList.add(classification);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return classificationList;
 	}
 }

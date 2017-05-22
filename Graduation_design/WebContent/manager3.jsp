@@ -1,6 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.ysu.entity.Book" %>
 <%@page import="com.ysu.entity.Admin" %>
+<%@page import="com.ysu.entity.Classification" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -37,10 +38,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		var author = $("#author").val();
   		var classification = $("#classification option:selected").val();
   		var position = $("#position").val();
+  		var picture = $("#picture").val();
   		
 		$.ajax({
 			type:'post',
-			data:{bookId:bookId,bookName:bookName,author:author,classification:classification,position:position,type:"addBook"},
+			data:{bookId:bookId,bookName:bookName,author:author,classification:classification,position:position,picture:picture,type:"addBook"},
 			url:"<%=request.getContextPath()%>/book",
 			success:function(data){
 				if (data == 'success') {
@@ -70,6 +72,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   			window.location.reload();
   		}
   	}
+  	
+  	function delBook (bookId) {
+
+  		$.ajax({
+			type:'post',
+			data:{bookId:bookId,type:"delBook"},
+			url:"<%=request.getContextPath()%>/book",
+			success:function(data){
+				if (data == 'success') {
+					alert("删除成功！");
+					window.location.reload();
+				} else {
+					alert(data);
+				}
+			},
+			error:function () {
+				alert("系统错误，请联系管理员。");
+			}
+		});
+  	}
   </script>
   
   </head>
@@ -94,7 +116,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </tr>
   <tr>
     <td width="44" height="65"><img src="img/manager.a.png" width="32" height="29" /></td>
-	<td><a href="manager4.jsp"><font size="+2">报表输出</font></a></td>
+	<td><a href="<%=request.getContextPath()%>/book?type=getAllClassification"><font size="+2">分类管理</font></a></td>
 </table>
 </div>
 
@@ -126,9 +148,13 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td>图书分类：</td>
     <td>
 	    <select name="classification" id="classification" style="width: 151.24px;"> 
-			<option value="文学">文学</option> 
-			<option value="小说">小说</option> 
-			<option value="技术">技术</option> 
+	<%if (request.getAttribute("classificationList") != null) { 
+	  List<Classification> classificationList = (List<Classification>) request.getAttribute("classificationList");
+	  for (Classification classification:classificationList) {
+  %>
+	  <option value="<%=classification.getClassificationName() %>"><%=classification.getClassificationName() %></option> 
+  <%	}
+	 } %>
 		</select> 
 	</td>
 
@@ -169,7 +195,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<td><%=book.getPosition() %></td>
 		<td><%=book.getCoverPicture() %></td>
 	    <td>&nbsp;<font size="+1">&nbsp;<a href="javascript:void(0)" onclick="modifyBook('<%=book.getBook_id() %>','<%=book.getBook_name() %>','<%=book.getAuthor() %>','<%=book.getClassification() %>','<%=book.getPosition() %>','<%=book.getCoverPicture() %>')">修改</a></font>&nbsp;&nbsp;
-	    	<font size="+1"><a href="javascript:void(0)">删除</a></font>
+	    	<font size="+1"><a href="javascript:void(0)" onclick="delBook('<%=book.getBook_id() %>')">删除</a></font>
 	    </td>
 	  </tr>
   <%	}
