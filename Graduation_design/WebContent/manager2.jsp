@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.ysu.entity.Book" %>
+<%@page import="com.ysu.entity.Admin" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -26,7 +27,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<%if (session.getAttribute("adminUser") == null){ %>
 	alert("管理员未登录！");
 	window.location.href = "<%=request.getContextPath()%>/main.jsp";
-	<%}%>
+	<%}
+	
+	if (request.getAttribute("returnBookResult") != null) {
+	%>
+	alert('<%=request.getAttribute("returnBookResult") %>');
+	<%
+	}
+	%>
   </script>
   </head>
   <body>
@@ -53,7 +61,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </table>
 </div>
 
-<div class="a35"></div>
+<div class="a35"><font size="+1"><font size="+1">管理员：<%if (session.getAttribute("adminUser") != null){ %><%=((Admin)session.getAttribute("adminUser")).getAdmin_name() %><%} %></font>&nbsp;&nbsp;&nbsp;<a href="index">首页</a>&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/user?type=logout">登出</a></font><br/></div>
 
 <div class="a36"><font color="#623131" size="+2">借还书管理</font></div>
 
@@ -75,6 +83,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="110"><font size="+1">&nbsp;&nbsp;借书时间</font></td>
     <td width="110"><font size="+1">&nbsp;&nbsp;还书时间</font></td>
     <td width="110"><font size="+1">&nbsp;&nbsp;借书状态</font></td>
+    <td width="110"><font size="+1">&nbsp;&nbsp;操作</font></td>
   </tr>
   <%List<Book> bookList = (List<Book>)request.getAttribute("bookList");
   	if (bookList!= null) {
@@ -92,6 +101,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <%} else { %>
     <td>&nbsp;</td>
     <%} %>
+    <td><a href="<%=request.getContextPath()%>/book?type=returnBook&bookId=<%=book.getBook_id() %>&userId=<%=book.getUser_id() %> ">归还</a></td>
   </tr>
   <%
   		}

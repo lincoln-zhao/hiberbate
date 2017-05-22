@@ -156,6 +156,7 @@ public class BookDao {
 		
 		try {
 			String sql = " SELECT T_USER.USER_NAME "
+					   + "       ,T_USER.USER_ID "
 					   + "       ,T_BOOK.BOOK_ID "
 					   + "       ,T_BOOK.BOOK_NAME "
 					   + "       ,T_BOOK.AUTHOR "
@@ -175,6 +176,7 @@ public class BookDao {
 				book.setStart_date(rs.getDate("BORROW_OUT_TIME"));
 				book.setEnd_date(rs.getDate("RETURN_TIME"));
 				book.setUser_name(rs.getString("USER_NAME"));
+				book.setUser_id(rs.getString("USER_ID"));
 				
 				bookList.add(book);
 			}
@@ -435,6 +437,189 @@ public class BookDao {
 				Book book = new Book();
 				book.setBook_id(rs.getString("BOOK_ID"));
 				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setCoverPicture(rs.getString("PICTURE"));
+				bookList.add(book);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return bookList;
+	}
+	
+	/**
+	 * 根据图书id查询图书信息
+	 * @param bookId
+	 * @return
+	 */
+	public Book getSingleBook (String bookId) {
+		Book book = null;
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT BOOK_ID "
+					   + "       ,BOOK_NAME "
+					   + "       ,AUTHOR "
+					   + "       ,CLASSIFICATION "
+					   + "       ,POSITION "
+					   + "       ,ADD_DATE "
+					   + "       ,PICTURE "
+					   + "   FROM T_BOOK "
+					   + "  WHERE BOOK_ID = ? ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, bookId);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setAuthor(rs.getString("AUTHOR"));
+				book.setClassification(rs.getString("CLASSIFICATION"));
+				book.setPosition(rs.getString("POSITION"));
+				book.setAdd_date(rs.getDate("ADD_DATE"));
+				book.setCoverPicture(rs.getString("PICTURE"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return book;
+	}
+	
+	/**
+	 * 用户借书
+	 * @param bookId
+	 * @param userId
+	 * @return
+	 */
+	public String borrowBook (String bookId, String userId) {
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			conn.setAutoCommit(false); // 设置事务不自动提交
+			
+			// 添加借书信息到借书表
+			String sqlSelect = " INSERT INTO T_BORROWBOOK (USER_ID, BOOK_ID, BORROW_OUT_TIME) "
+							 + " VALUES (?, ?, CURDATE()) ";
+			
+			ps = conn.prepareStatement(sqlSelect);
+			ps.setString(1, userId);
+			ps.setString(2, bookId);
+			
+			int lines = ps.executeUpdate();
+			if (lines > 0) {
+				conn.commit();
+				return "success";
+			} else {
+				conn.rollback();
+				System.out.println("执行数据操作异常");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("执行数据操作异常");
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				System.out.println("执行数据操作异常");
+			}
+		} finally {
+			try {
+				if (ps != null) {
+					ps.close();
+					ps = null;
+				}
+				
+				if (conn != null) {
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				System.out.println("关闭PreparedStatement、Connection异常");
+			}
+		}
+		return "借书失败，请与管理员联系！";
+	}
+	
+	/**
+	 * 查询图书（模糊查询）
+	 * @param str
+	 * @return
+	 */
+	public List<Book> searchBook (String str) {
+		List<Book> bookList = new ArrayList<Book>();
+		
+		// 获取Connection连接
+		Connection conn = DBUtil.getConnection();
+		
+		PreparedStatement ps = null;
+		
+		try {
+			String sql = " SELECT BOOK_ID "
+					   + "       ,BOOK_NAME "
+					   + "       ,AUTHOR "
+					   + "       ,CLASSIFICATION "
+					   + "       ,POSITION "
+					   + "       ,ADD_DATE "
+					   + "       ,PICTURE "
+					   + "   FROM T_BOOK "
+					   + "  WHERE (BOOK_NAME LIKE ?) "
+					   + "     OR (AUTHOR LIKE ?) "
+					   + "     OR (CLASSIFICATION LIKE ?) ";
+	
+			ps = conn.prepareStatement(sql);
+			ps.setString(1, "%" + str + "%");
+			ps.setString(2, "%" + str + "%");
+			ps.setString(3, "%" + str + "%");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				Book book = new Book();
+				book.setBook_id(rs.getString("BOOK_ID"));
+				book.setBook_name(rs.getString("BOOK_NAME"));
+				book.setAuthor(rs.getString("AUTHOR"));
+				book.setClassification(rs.getString("CLASSIFICATION"));
+				book.setPosition(rs.getString("POSITION"));
+				book.setAdd_date(rs.getDate("ADD_DATE"));
 				book.setCoverPicture(rs.getString("PICTURE"));
 				bookList.add(book);
 			}

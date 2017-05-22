@@ -1,4 +1,7 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@page import="com.ysu.entity.Book" %>
+<%@page import="com.ysu.entity.User" %>
+<%@page import="com.ysu.entity.Admin" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -30,8 +33,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <p><font size="+3" color="#000066"> &nbsp;燕山大学里仁学院图书馆</font></p>
     <p><font size="+1" color="#000066">Benevolence in yanshan university college library</font></p>
   </div>
+  <div class="a4" id="login" style="height: 41px;left: 1114px;position: absolute;top: 3px;width: 239px;">
+  <font color="#000000">
+	<%
+	if (session.getAttribute("loginUser") != null) {
+	%>
+	<font color="#000000">欢迎&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/user?type=showUser" target="_blank"><%=((User)session.getAttribute("loginUser")).getUser_name() %></a></font>
+	<%
+	} else if (session.getAttribute("adminUser") != null) {
+	%>
+	<font color="#000000">欢迎管理员&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/manager.jsp"><%=((Admin)session.getAttribute("adminUser")).getAdmin_name() %></a></font>
+	<%	
+	} else {
+	%>
+	 <h3> <a href="javascript:void(0)" onclick="openLoginPage()"><font color="#000000">登录</font></a>&nbsp;&nbsp;
+ 	<a href="javascript:void(0)" onclick="openAdminLoginPage()"><font color="#000000">管理员登录</font></a></h3>
+	<%
+	}
+	%>
+
+  </font></div>
 </div>
-<div class="a20"><font size="+1"><a href="">首页</a>&nbsp;&nbsp;&nbsp;<a href="">返回</a></font> </div>
+ 
 
 <div class="a70"></div>
 
@@ -45,13 +68,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="200" align="center"><font size="+1" >分类</font></td>
     <td width="200" align="center"><font size="+1" >详情</font></td>
   </tr>
+  <%
+  List<Book> bookList = (List<Book>) request.getAttribute("bookList");
+  if (bookList != null && bookList.size() > 0) {
+	  for (Book book:bookList) {
+  %>
   <tr>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center">&nbsp;</td>
-    <td align="center"><a href=""><font size="+1" >详细信息</font></a></td>
+    <td align="center"><img src="img/<%=book.getCoverPicture()%>" width="129" height="112" /></td>
+    <td align="center"><%=book.getBook_name() %></td>
+    <td align="center"><%=book.getAuthor() %></td>
+    <td align="center"><%=book.getClassification() %></td>
+    <td align="center"><a href="<%=request.getContextPath()%>/book?bookId=<%=book.getBook_id() %>&type=getSingleBook"><font size="+1" >详细信息</font></a></td>
   </tr>
+  <%
+	  }
+  } else {
+  %>
+  搜索结果为空。
+  <%} %>
 </table>
 </div>
 </body>

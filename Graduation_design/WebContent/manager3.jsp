@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.ysu.entity.Book" %>
+<%@page import="com.ysu.entity.Admin" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -97,7 +98,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </table>
 </div>
 
-<div class="a35"></div>
+<div class="a35"><font size="+1"><font size="+1">管理员：<%if (session.getAttribute("adminUser") != null){ %><%=((Admin)session.getAttribute("adminUser")).getAdmin_name() %><%} %></font>&nbsp;&nbsp;&nbsp;<a href="index">首页</a>&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/user?type=logout">登出</a></font></div>
 
 <div class="a36"><font color="#623131" size="+2">图书管理</font></div>
 

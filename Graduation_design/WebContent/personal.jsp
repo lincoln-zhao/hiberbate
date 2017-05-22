@@ -32,7 +32,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		if (user == null) {
   		%>
   		alert("用户未登录！");
-  		window.location.href = "<%=request.getContextPath()%>/main.jsp";
+  		window.location.href = "<%=request.getContextPath()%>/index";
   		<%
   		}
   		
@@ -54,7 +54,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <p><font size="+1" color="#000066">Benevolence in yanshan university college library</font></p>
   </div>
 </div>
-<div class="a20"><font size="+1"><a href="main.jsp">首页</a>&nbsp;&nbsp;&nbsp;<a href="javascript:history.go(-1)">返回</a></font> </div>
+<div class="a20"><font size="+1"><a href="index">首页</a>&nbsp;&nbsp;&nbsp;<a href="<%=request.getContextPath()%>/user?type=logout">登出</a></font> </div>
 
 <div class="a27" style="border-color:#000033; border-right-style:solid;border-left-style:solid; border-width:medium;">
   <p><font size="+3"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 个人信息</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="update.jsp"><font size="+1">修改个人信息</font></a></p>
@@ -101,17 +101,29 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <td width="166"><font size="+3">&nbsp;最晚还书时间</font></td>
     <td width="166"><font size="+3">&nbsp;操作</font></td>
   </tr>
-  <tr>
+
   <%
   List<Book> nowBookList = (List<Book>)request.getAttribute("nowBookList");
   	if (nowBookList != null) {
   		for (Book book:nowBookList) {
   %>
+  <tr>
     <td><%=book.getBook_id() %></td>
     <td><%=book.getBook_name() %></td>
 	<td><%=book.getStart_date() %></td>
 	<td><%=book.getEnd_date() %></td>
+	<%
+		if (book.getEnd_date().after(new Date())) {
+	%>
 	<td><a href="<%=request.getContextPath()%>/book?type=returnBook&bookId=<%=book.getBook_id() %>">归还</a></td>
+	<%
+		} else {
+	%>
+	<td><a href="javascript:alert('图书超期，轻语管理员联系。')">归还</a></td>
+	<%
+		}
+	%>
+  </tr>
   <%
   		}
   	} else {
@@ -124,10 +136,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <%
   	}
   %>
-  </tr>
+
 </table>
 </div>
-<div class="a30" align="center" style="top:420px;"><font size="+3">曾借书</font></div>
+<div class="a30" align="center" style="top:420px;"><font size="+3">借书历史</font></div>
 <div class="a31" style="top:480px;">
   <table width="855" height="159" border="1" align="center">
   <tr>

@@ -35,4 +35,16 @@ public class BookService {
 	public List<Book> newBook () {
 		return bookDao.newBook();
 	}
+	
+	public Book getSingleBook (String bookId) {
+		return bookDao.getSingleBook(bookId);
+	}
+	
+	public String borrowBook (String bookId, String userId) {
+		return bookDao.borrowBook(bookId, userId);
+	}
+	
+	public List<Book> searchBook (String str) {
+		return bookDao.searchBook(str);
+	}
 }

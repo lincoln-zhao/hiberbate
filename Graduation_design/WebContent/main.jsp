@@ -1,6 +1,8 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
 <%@page import="com.ysu.entity.User" %>
 <%@page import="com.ysu.entity.Admin" %>
+<%@page import="com.ysu.entity.News" %>
+<%@page import="com.ysu.entity.Book" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -26,14 +28,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 function openLoginPage(){
 	var k = window.showModalDialog('userlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
 	if (k == 1) {
-		window.location.reload();
+		window.location.href = "<%=request.getContextPath()%>/index";
 	}
 }
 
 function openAdminLoginPage () {
 	var k = window.showModalDialog('adminlogin.jsp','dialogWidthwidth=200,dialogWidthheight=200');
 	if (k == 1) {
-		window.location.reload();
+		window.location.href = "<%=request.getContextPath()%>/index";
 	}
 }
 </script>
@@ -83,78 +85,66 @@ function openAdminLoginPage () {
 <div class="a5"><img src="img/a.gif" width="935" height="282"></img></div>
 
 <div class="a6">
+<form action="<%=request.getContextPath()%>/book?type=search" method="post">
   <h1>
-    <input name="搜索" type="text"  style="width:300px; height:30px;"/>
+    <input name="search" type="text"  style="width:300px; height:30px;"/>
     &nbsp;
   <input type="submit" name="Submit" value="查找"  style="width:60px; height:30px; color:#FFFFFF; background-color:#FF0000;"/>
   </h1>
+  </form>
 </div>
 
-<div class="a8" align="center"><font color="#0033CC" size="+3">图书推送</font><table width="310" border="0">
+<div class="a8" align="center"><font color="#0033CC" size="+3">新书推荐</font><table width="310" border="0">
+  <%
+  	List<Book> hotBookList = (List<Book>)request.getAttribute("newBook");
+  	if (hotBookList != null) {
+  		for (Book book:hotBookList) {
+  %>
   <tr>
-    <td width="104"><img src="img/main.f.png"width="82" height="95"></img>&nbsp;</td>
-    <td width="190">&nbsp;天才在左 疯子在右</td>
+    <td width="104"><a href="<%=request.getContextPath()%>/book?bookId=<%=book.getBook_id() %>&type=getSingleBook"><img src="img/<%=book.getCoverPicture() %>"width="82" height="95"></img></a>&nbsp;</td>
+    <td width="190">&nbsp;<a href="<%=request.getContextPath()%>/book?bookId=<%=book.getBook_id() %>&type=getSingleBook"><%=book.getBook_name() %></a></td>
   </tr>
-  <tr>
-    <td height="98"><img src="img/main.g.png"width="67" height="88"></img>&nbsp;</td>
-    <td>&nbsp;菜根谭</td>
-  </tr>
-  <tr>
-    <td height="110"><img src="img/main.h.png"width="71" height="95"/></img>&nbsp;</td>
-    <td>&nbsp;WEB架构</td>
-  </tr>
+  <%
+  		}
+  	}
+  %>
 </table>
 
 
 </div>
 <div class="a9" align="center"><font color="#0033CC" size="+3">热门借阅</font>
   <table width="308" height="315" border="0">
+  <%
+  	List<Book> bookList = (List<Book>)request.getAttribute("hotBook");
+  	if (bookList != null) {
+  		for (Book book:bookList) {
+  %>
   <tr>
-    <td width="298">&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;狼图腾</td>
+    <td width="298">&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;
+    <a href="<%=request.getContextPath()%>/book?bookId=<%=book.getBook_id() %>&type=getSingleBook"><%=book.getBook_name() %></a>
+    </td>
+    
   </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;天才在左 疯子在右</td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;C语言程序设计</td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;谁动了我的奶酪</td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;明朝那些事儿></td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;平凡的世界</td>
-  </tr>
-  <tr>
-    <td height="45">&nbsp;<img src="img/main.e.png"width="21" height="17"></img>&nbsp;西点军校</td>
-  </tr>
+  <%
+  		}
+  	}
+  %>
 </table></div>
 
 <div class="a10" align="center" ><font color="#0033CC" size="+3">最新动态</font>
   <table width="309" height="316" border="0">
+  <%
+  	List<News> newsList = (List<News>)request.getAttribute("newsList");
+  	if (newsList != null) {
+		for (News news:newsList) {
+  %>
   <tr>
-    <td width="299">&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1">&nbsp;新书入馆</font></td>
+    <td width="299">&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1">&nbsp;<%=news.getTitle() %></font></td>
   </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1" >&nbsp;读书节活动</font></td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1" >&nbsp;提供两会主题文献通知</font></td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1" >&nbsp;暑期开馆安排</font></td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1" >&nbsp;毕业季图书</font></td>
-  </tr>
-  <tr>
-    <td>&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1" >&nbsp;清明开馆安排</font></td>
-  </tr>
-  <tr>
-    <td height="44">&nbsp;<img src="img/main.e.png"width="21" height="17"><font size="+1" >&nbsp;关于借还书通知</font></td>
-  </tr>
+  <%
+		}
+	}
+  %>
 </table></div>
 <div class="a50"><a href=""><font color="#999999">文学类</font></a>&nbsp;&nbsp;<a href=""><font color="#999999">专业类</font></a></div>
 <div class="a11" align="center"><br>

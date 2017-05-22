@@ -66,6 +66,9 @@ public class UserServlet extends HttpServlet {
 		} else if ("modifyUser".equals(request.getParameter("type"))) {
 			// 修改用户信息
 			modifyUser(request, response);
+		} else if ("logout".equals(request.getParameter("type"))) {
+			// 用户登出
+			logout(request, response);
 		}
 		
 	}
@@ -317,5 +320,26 @@ public class UserServlet extends HttpServlet {
 			response.setCharacterEncoding("UTF-8");
 			response.getWriter().write("用户修改失败！");
 		}
+	}
+	
+	/**
+	 * 用户或管理员登出
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 * @throws ServletException 
+	 */
+	private void logout (HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		User user = (User)request.getSession().getAttribute("loginUser");
+		if (user != null) {
+			request.getSession().removeAttribute("loginUser");
+		}
+		
+		Admin admin = (Admin)request.getSession().getAttribute("adminUser");
+		if (admin != null) {
+			request.getSession().removeAttribute("adminUser");
+		}
+		
+		request.getRequestDispatcher("index").forward(request, response);
 	}
 }
