@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="com.lincoln.entity.Employee" table="t_employee">
+		<id name="eid" column="eid">
+			<generator class="native"></generator>
+		</id>
+		<property name="ename" column="ename" />
+		<property name="salary" column="salary" />
+		<many-to-one name="department" column="deid" class="com.lincoln.entity.Department"></many-to-one>
+	</class>
+</hibernate-mapping>
