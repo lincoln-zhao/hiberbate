@@ -10,7 +10,7 @@
 		</id>
 		<property name="user_name" column="user_name" />
 		<property name="password" column="password" />
-		<set name="roleSet" table="user_role">
+		<set name="roleSet" table="user_role" cascade="save-update">
 			<key column="user_id"></key>
 			<many-to-many class="com.lincoln.entity.Role" column="role_id"></many-to-many>
 		</set>
