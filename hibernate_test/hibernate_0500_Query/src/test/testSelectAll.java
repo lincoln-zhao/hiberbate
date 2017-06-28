@@ -7,6 +7,7 @@ import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
@@ -82,13 +83,27 @@ public class testSelectAll {
 		for (User user : userList) {
 			System.out.println(user);
 		}*/
-		// 统计查询
+/*		// 统计查询
 		Criteria criteria = session.createCriteria(User.class);
 		// 设置操作
 		criteria.setProjection(Projections.avg("user_id"));
 		Object obj = criteria.uniqueResult();
 		
-		System.out.println(obj);
+		System.out.println(obj);*/
+		
+		// 离线查询
+		DetachedCriteria detachedCriteria = DetachedCriteria.forClass(User.class);
+		
+		detachedCriteria.add(Restrictions.eq("user_id", 1));
+		
+		Criteria criteria = detachedCriteria.getExecutableCriteria(session);
+		
+		List<User> userList = criteria.list();
+		
+		for (User user : userList) {
+			System.out.println(user);
+		}
+		
 		
 		
 		
