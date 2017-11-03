@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+    
+    <!-- 注册userMapper.xml文件， jobMapping.xml位于com.lincoln.mapping这个包下，所以resource写成com/lincoln/mapping/jobMapping.xml-->
+    <mappers>
+    	<mapper resource="com/lincoln/entity/UserMapper.xml"/>
+    </mappers>
+    
+</configuration>
