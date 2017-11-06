@@ -10,7 +10,7 @@
     http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
     http://www.springframework.org/schema/context
     http://www.springframework.org/schema/context/spring-context-4.3.xsd">
-    <context:component-scan base-package="com.ljd.service"></context:component-scan>
+    <context:component-scan base-package="com.lincoln"></context:component-scan>
     <context:property-placeholder location="classpath:config.properties"
         ignore-unresolvable="true" />
     <!-- 配置数据源 -->
@@ -52,9 +52,9 @@
     </bean>
     
     <bean class="org.mybatis.spring.mapper.MapperFactoryBean" id="userDao">
-	    <property name="mapperInterface" value="com.lincoln.dao.UserDao"></property>
-	    <property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
-	  </bean>
+		<property name="mapperInterface" value="com.lincoln.Dao.UserDao"></property>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
+	</bean>
 <!--     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> -->
 <!--         <property name="dataSource" ref="dataSource" /> -->
 <!--         配置数据库表对应的java实体类 -->

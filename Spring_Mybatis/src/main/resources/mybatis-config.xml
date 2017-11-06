@@ -3,7 +3,7 @@
 <configuration>
 
     
-    <!-- 注册userMapper.xml文件， jobMapping.xml位于com.lincoln.mapping这个包下，所以resource写成com/lincoln/mapping/jobMapping.xml-->
+    <!-- 注册userMapper.xml文件， UserMapper.xml位于com.lincoln.mapping这个包下，所以resource写成com/lincoln/mapping/UserMapper.xml-->
     <mappers>
     	<mapper resource="com/lincoln/entity/UserMapper.xml"/>
     </mappers>
