@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的
+例如namespace="com.lincoln.mapping.jobMapping"就是com.lincoln.mapping(包名)+jobMapping(jobMapping.xml文件去除后缀)
+ -->
+<mapper namespace="com.lincoln.user.dao.UserDao">
+
+
+    <select id="getAllUsers" resultType="com.lincoln.user.entity.User">
+        select * 
+          from t_user 
+    </select>
+
+    <select id="getUserById" parameterType="java.lang.String" resultType="com.lincoln.user.entity.User">
+        select * 
+          from t_user 
+         where id = #{id}
+    </select>
+    
+    <insert id="addUser" parameterType="com.lincoln.user.entity.User">
+    	insert into t_user (name, password) 
+    	     values (#{name} , #{password})
+    </insert>
+    
+<!--     <delete id="deleteJobById" parameterType="int"> -->
+<!--     	delete from t_job  -->
+<!--     	 where job_id = #{job_id} -->
+<!--     </delete> -->
+    
+<!--     <update id="updateJobById" parameterType="com.lincoln.entity.Job"> -->
+<!--     	update t_job  -->
+<!--     	   set job_name = #{job_name}  -->
+<!--     	      ,salary = #{salary}  -->
+<!--     	 where job_id = #{job_id} -->
+<!--     </update> -->
+</mapper>
