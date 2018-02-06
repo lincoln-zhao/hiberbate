@@ -26,16 +26,17 @@
 			    url: url,  
 			    data: data,  
 			    success: function (obj) {
-			    	for (var i=0;i<obj.length;i++) {
-			    		var innerHTML = "<tr>";
-			    		innerHTML += "<td>"+ obj[i].id +"</td>";
-			    		innerHTML += "<td>"+ obj[i].name +"</td>";
-			    		innerHTML += "<td>"+ obj[i].password +"</td>";
-			    		innerHTML += "<td><a href='javascript:deleteUser(" + obj[i].id + ")'>删除</a></td>";
-			    		innerHTML += "</tr>";
+			    	alert(obj);
+// 			    	for (var i=0;i<obj.length;i++) {
+// 			    		var innerHTML = "<tr>";
+// 			    		innerHTML += "<td>"+ obj[i].id +"</td>";
+// 			    		innerHTML += "<td>"+ obj[i].name +"</td>";
+// 			    		innerHTML += "<td>"+ obj[i].password +"</td>";
+// 			    		innerHTML += "<td><a href='javascript:deleteUser(" + obj[i].id + ")'>删除</a></td>";
+// 			    		innerHTML += "</tr>";
 			    		
-			    		$('#userList').append(innerHTML);
-			    	}
+// 			    		$('#userList').append(innerHTML);
+// 			    	}
 			    	
 			    },
 			    error:function(obj){
@@ -49,7 +50,9 @@
 		}
 		
 		function addUser () {
-			var data = {"url":"/user/addUser","param":"name="+$("#name").val()+"&password="+$("#password").val()};
+			var name = encodeURIComponent(encodeURIComponent($("#name").val()));
+			var password = encodeURIComponent(encodeURIComponent($("#password").val()));
+			var data = {"url":"/user/addUser","param":"name="+name+"&password="+password};
 			$.ajax({
 			    type: "post",  
 			    dataType: "json",  

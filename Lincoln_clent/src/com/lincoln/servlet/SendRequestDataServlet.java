@@ -67,8 +67,7 @@ public class SendRequestDataServlet extends HttpServlet {
             	// 读取响应数据
                 InputStream is = httpConn.getInputStream();
                 
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(is));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(is,"UTF-8"));
                 while ((sCurrentLine = reader.readLine()) != null) {
                     if (sCurrentLine.length() > 0) {
                     	resultString = resultString + sCurrentLine.trim();
