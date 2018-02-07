@@ -85,4 +85,7 @@ http://www.springframework.org/schema/tx/spring-tx.xsd
 
 
 <!-- 	<import resource="classpath:web-config.xml"/>	 -->
+
+	<bean id="ObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"></bean>
+
 </beans>

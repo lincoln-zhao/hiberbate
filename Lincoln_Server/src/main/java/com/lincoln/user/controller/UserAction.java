@@ -23,6 +23,16 @@ import com.lincoln.user.service.UserService;
 @RequestMapping("/user")
 public class UserAction {
 	private UserService userService;
+	private ObjectMapper mapper;
+
+	public ObjectMapper getMapper() {
+		return mapper;
+	}
+
+	@Resource
+	public void setMapper(ObjectMapper mapper) {
+		this.mapper = mapper;
+	}
 
 	public UserService getUserService() {
 		return userService;
@@ -33,12 +43,15 @@ public class UserAction {
 		this.userService = userService;
 	}
 	
-	@RequestMapping(value="/getAllUsers",method=RequestMethod.POST)  
+	/**
+	 * 查询全部
+	 * @return
+	 */
+	@RequestMapping(value="/getAllUsers",method=RequestMethod.POST,produces = "application/json; charset=utf-8")  
 	public @ResponseBody String getAllUsers () {
 		
 		List<User> allUsers = userService.getAllUsers();
 //		JSONArray ja = JSONArray.fromObject(allUsers);
-		ObjectMapper mapper = new ObjectMapper();
 		String result = "";
 		try {
 			Map<String,Object> map = new HashMap<String,Object>();
@@ -52,36 +65,147 @@ public class UserAction {
 		return result;
 	}
 	
-	@RequestMapping(value="/addUser",method=RequestMethod.POST)  
+	/**
+	 * 添加用户
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/addUser",method=RequestMethod.POST,produces = "application/json; charset=utf-8")  
 	public @ResponseBody String addUser (HttpServletRequest request) {
+		
+		// 返回的数据
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		String result = "";
+		
 		
 		String name = request.getParameter("name");
 		String password = request.getParameter("password");
 		try {
 			if (name != null && !"".equals(name)) {
-				name = URLDecoder.decode(request.getParameter("name"), "UTF-8");
+				name = URLDecoder.decode(name, "UTF-8");
 			}
 			
 			if (password != null && !"".equals(password)) {
-				password = URLDecoder.decode(request.getParameter("password"), "UTF-8");
+				password = URLDecoder.decode(password, "UTF-8");
 			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
-			return "false";
+			return result;
 		}
 		
 		User user = new User();
 		user.setName(name);
 		user.setPassword(password);
 		
-		int result = userService.addUser(user);
+		int resultInt = userService.addUser(user);
 		
-		if (result == 1) {
-			return "true";
+		// 返回1代表添加成功
+		if (resultInt == 1) {
+			resultMap.put("rt", 1);
+		} else {
+			resultMap.put("rt", 0);
 		}
 		
-		return "false";
+		try {
+			result = mapper.writeValueAsString(resultMap);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
+	
+	/**
+	 * 删除用户
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/deleteUser",method=RequestMethod.POST,produces = "application/json; charset=utf-8")  
+	public @ResponseBody String deleteUserById (HttpServletRequest request) {
+		// 返回的数据
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		String result = "";
+		
+		String id = request.getParameter("id");
+		
+		try {
+			if (id != null && !"".equals(id)) {
+				id = URLDecoder.decode(id, "UTF-8");
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return result;
+		}
+		
+		int resultInt = userService.deleteUserById(id);
+		
+		// 返回1代表添加成功
+		if (resultInt == 1) {
+			resultMap.put("rt", 1);
+		} else {
+			resultMap.put("rt", 0);
+		}
+		
+		try {
+			result = mapper.writeValueAsString(resultMap);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * 更改用户
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value="/updateUser",method=RequestMethod.POST,produces = "application/json; charset=utf-8")  
+	public @ResponseBody String updateUserById (HttpServletRequest request) {
+		// 返回的数据
+		Map<String,Object> resultMap = new HashMap<String,Object>();
+		String result = "";
+		
+		String id = request.getParameter("id");
+		String name = request.getParameter("name");
+		String password = request.getParameter("password");
+		try {
+			if (id != null && !"".equals(id)) {
+				id = URLDecoder.decode(id, "UTF-8");
+			}
+			
+			if (name != null && !"".equals(name)) {
+				name = URLDecoder.decode(name, "UTF-8");
+			}
+			
+			if (password != null && !"".equals(password)) {
+				password = URLDecoder.decode(password, "UTF-8");
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			return result;
+		}
+		
+		User user = new User();
+		user.setId(id);
+		user.setName(name);
+		user.setPassword(password);
+		
+		int resultInt = userService.updateUserById(user);
+		
+		// 返回1代表添加成功
+		if (resultInt == 1) {
+			resultMap.put("rt", 1);
+		} else {
+			resultMap.put("rt", 0);
+		}
+		
+		try {
+			result = mapper.writeValueAsString(resultMap);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 	
 	@RequestMapping("/getOneUser")
 //	@RequestMapping(params="method=getAllUsers")

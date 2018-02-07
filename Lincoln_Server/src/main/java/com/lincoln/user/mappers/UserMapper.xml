@@ -27,6 +27,13 @@
     	 where id = #{id}
     </delete>
     
+    <update id="updateUserById">
+    	update t_user
+    	   set name = #{name}
+    	      ,password = #{password}
+    	 where id = #{id}
+    </update>
+    
 <!--     <delete id="deleteJobById" parameterType="int"> -->
 <!--     	delete from t_job  -->
 <!--     	 where job_id = #{job_id} -->

@@ -74,6 +74,7 @@ public class SendRequestDataServlet extends HttpServlet {
                     }
                 }
                 is.close();
+                
                 System.out.println(resultString);
             } else {
             	System.out.println("else error");

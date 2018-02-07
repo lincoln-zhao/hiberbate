@@ -7,5 +7,10 @@
 	<input type="text" name="password"><br>
 	<input type="submit"/>
 </form>
+
+<form action="http://localhost:8080/Lincoln_Server/user/getAllUsers" method="post">
+
+	<input type="submit"/>
+</form>
 </body>
 </html>

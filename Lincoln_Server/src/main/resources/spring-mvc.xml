@@ -24,6 +24,19 @@ http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
     
     <!-- 支持spring3.0新的mvc注解 -->
     <mvc:annotation-driven />
+<!-- 	<mvc:annotation-driven> -->
+<!--         <mvc:message-converters> -->
+<!--             <bean class="org.springframework.http.converter.StringHttpMessageConverter"> -->
+<!--                 <property name="supportedMediaTypes"> -->
+<!--                     <list> -->
+<!--                         <value>application/json;charset=UTF-8</value> -->
+<!--                     </list> -->
+<!--                 </property> -->
+<!--             </bean> -->
+<!--         </mvc:message-converters> -->
+<!--     </mvc:annotation-driven> -->
+
+
     <mvc:default-servlet-handler/>
     
 <!--     <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">   -->
